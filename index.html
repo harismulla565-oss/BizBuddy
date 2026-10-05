@@ -1,685 +1,442 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spectra — Eyewear, Sharpened</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>BizBuddy AI 5.2 — AI Business Copilot</title>
 <style>
-  :root{
-    --ink:#080b12;
-    --navy-deep:#0e1a3a;
-    --navy:#16265c;
-    --blue:#3a5be0;
-    --blue-soft:#5c7cf0;
-    --white:#ffffff;
-    --fog:#f3f5fa;
-    --line:#e2e6f0;
-    --gray:#697089;
-    --gray-dark:#3b4157;
-    --radius:2px;
-    --maxw:1240px;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--white);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
-  .mono{font-family:'JetBrains Mono',monospace;}
-  a{color:inherit;text-decoration:none;}
-  ul{list-style:none;}
-  img,svg{display:block;}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px;}
-  .eyebrow{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--blue);
-    display:flex;align-items:center;gap:10px;
-  }
-  .eyebrow::before{content:"";width:22px;height:1px;background:var(--blue);}
-  section{position:relative;}
-  button{font-family:inherit;cursor:pointer;border:none;background:none;}
-  .btn{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:14px 26px;
-    font-size:14px;font-weight:600;
-    letter-spacing:.02em;
-    border-radius:var(--radius);
-    transition:transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease;
-  }
-  .btn-primary{background:var(--white);color:var(--ink);}
-  .btn-primary:hover{transform:translateY(-2px);background:var(--blue-soft);color:var(--white);}
-  .btn-outline{border:1px solid rgba(255,255,255,.35);color:var(--white);}
-  .btn-outline:hover{border-color:var(--white);transform:translateY(-2px);}
-  .btn-dark{background:var(--ink);color:var(--white);}
-  .btn-dark:hover{background:var(--navy);transform:translateY(-2px);}
-  :focus-visible{outline:2px solid var(--blue-soft);outline-offset:3px;}
-
-  /* ===== Aperture signature element ===== */
-  .aperture{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-  .aperture svg{width:100%;height:100%;}
-  .aperture .ring{fill:none;stroke-width:1;}
-  @media (prefers-reduced-motion:no-preference){
-    .spin-slow{animation:spin 40s linear infinite;}
-    .spin-slow-rev{animation:spin 60s linear infinite reverse;}
-  }
-  @keyframes spin{to{transform:rotate(360deg);}}
-
-  /* ===== NAV ===== */
-  header{
-    position:fixed;top:0;left:0;right:0;z-index:100;
-    padding:22px 0;
-    transition:background .35s ease, padding .35s ease, border-color .35s ease;
-    border-bottom:1px solid transparent;
-  }
-  header.scrolled{
-    background:rgba(8,11,18,.86);
-    backdrop-filter:blur(14px);
-    padding:14px 0;
-    border-color:rgba(255,255,255,.08);
-  }
-  nav{display:flex;align-items:center;justify-content:space-between;}
-  .logo{display:flex;align-items:center;gap:10px;}
-  .logo .aperture{width:30px;height:30px;}
-  .logo-text{color:var(--white);font-size:19px;font-weight:700;letter-spacing:.03em;}
-  .nav-links{display:flex;align-items:center;gap:36px;}
-  .nav-links a{
-    color:rgba(255,255,255,.72);font-size:14px;font-weight:500;
-    position:relative;padding:4px 0;transition:color .2s ease;
-  }
-  .nav-links a::after{
-    content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--blue-soft);
-    transition:width .25s ease;
-  }
-  .nav-links a:hover{color:var(--white);}
-  .nav-links a:hover::after{width:100%;}
-  .nav-right{display:flex;align-items:center;gap:20px;}
-  .burger{display:none;flex-direction:column;gap:5px;width:26px;}
-  .burger span{height:2px;background:var(--white);border-radius:2px;}
-
-  /* ===== HERO ===== */
-  .hero{
-    min-height:100vh;
-    display:flex;align-items:center;
-    background:
-      radial-gradient(ellipse 900px 500px at 78% 18%, rgba(74,102,224,.35), transparent 60%),
-      linear-gradient(180deg, var(--ink) 0%, var(--navy-deep) 55%, var(--navy) 100%);
-    padding:150px 0 90px;
-    overflow:hidden;
-  }
-  .hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;position:relative;z-index:2;}
-  .hero-copy .eyebrow{color:var(--blue-soft);}
-  .hero-copy .eyebrow::before{background:var(--blue-soft);}
-  .hero h1{
-    color:var(--white);
-    font-size:clamp(42px,5.6vw,74px);
-    line-height:1.02;
-    font-weight:700;
-    letter-spacing:-.02em;
-    margin:22px 0 22px;
-  }
-  .hero h1 em{font-style:normal;color:var(--blue-soft);}
-  .hero p.lede{
-    color:rgba(255,255,255,.62);
-    font-size:17px;line-height:1.65;
-    max-width:460px;margin-bottom:34px;
-  }
-  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px;}
-  .stat-row{display:flex;gap:38px;flex-wrap:wrap;}
-  .stat{border-left:1px solid rgba(255,255,255,.16);padding-left:14px;}
-  .stat b{display:block;color:var(--white);font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;}
-  .stat span{color:rgba(255,255,255,.5);font-size:12px;letter-spacing:.03em;}
-
-  .hero-visual{position:relative;height:520px;display:flex;align-items:center;justify-content:center;}
-  .hero-visual .aperture{width:440px;height:440px;position:absolute;}
-  .hero-visual .aperture.a2{width:340px;height:340px;}
-  .hero-visual .aperture.a3{width:250px;height:250px;}
-  .glasses-hero{position:relative;z-index:3;width:230px;filter:drop-shadow(0 30px 60px rgba(0,0,0,.55));}
-
-  /* ===== OFFERS TICKER ===== */
-  .ticker-band{
-    background:var(--blue);
-    color:var(--white);
-    overflow:hidden;
-    border-top:1px solid rgba(255,255,255,.15);
-    border-bottom:1px solid rgba(255,255,255,.15);
-  }
-  .ticker-track{
-    display:flex;white-space:nowrap;width:max-content;
-    padding:13px 0;
-  }
-  @media (prefers-reduced-motion:no-preference){
-    .ticker-track{animation:ticker 32s linear infinite;}
-  }
-  @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-  .ticker-track span{
-    font-family:'JetBrains Mono',monospace;
-    font-size:13px;font-weight:500;letter-spacing:.03em;
-    padding:0 28px;
-    display:flex;align-items:center;gap:10px;
-  }
-  .ticker-track span::before{content:"◆";font-size:9px;color:rgba(255,255,255,.6);}
-
-  /* ===== SECTION HEADERS ===== */
-  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:50px;flex-wrap:wrap;}
-  .sec-head h2{font-size:clamp(28px,3.4vw,42px);font-weight:700;letter-spacing:-.01em;margin-top:14px;}
-  .sec-head p{color:var(--gray);max-width:420px;font-size:15px;line-height:1.6;}
-
-  /* ===== CATEGORY CARDS ===== */
-  .categories{padding:110px 0 40px;}
-  .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
-  .cat-card{
-    background:var(--fog);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:34px 28px 28px;
-    position:relative;overflow:hidden;
-    transition:border-color .3s ease, background .3s ease, transform .3s ease;
-  }
-  .cat-card:hover{border-color:var(--navy);background:var(--white);transform:translateY(-4px);}
-  .cat-card .aperture{width:120px;height:120px;margin-bottom:26px;color:var(--navy);}
-  .cat-card h3{font-size:21px;font-weight:700;margin-bottom:8px;}
-  .cat-card p{color:var(--gray);font-size:14px;line-height:1.6;margin-bottom:18px;}
-  .cat-card .cat-link{
-    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;
-    color:var(--blue);display:inline-flex;align-items:center;gap:6px;font-weight:600;
-  }
-  .cat-card .count{
-    position:absolute;top:28px;right:28px;
-    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray);
-  }
-
-  /* ===== PRODUCTS ===== */
-  .products{padding:100px 0;background:var(--white);}
-  .filter-row{display:flex;gap:10px;margin-bottom:44px;flex-wrap:wrap;}
-  .filter-btn{
-    padding:9px 18px;border:1px solid var(--line);border-radius:20px;
-    font-size:13px;font-weight:600;color:var(--gray-dark);
-    transition:all .2s ease;
-  }
-  .filter-btn:hover{border-color:var(--navy);}
-  .filter-btn.active{background:var(--ink);color:var(--white);border-color:var(--ink);}
-
-  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
-  .prod-card{
-    border:1px solid var(--line);border-radius:var(--radius);
-    display:flex;flex-direction:column;overflow:hidden;
-    transition:box-shadow .3s ease, transform .3s ease, border-color .3s ease;
-  }
-  .prod-card:hover{transform:translateY(-5px);box-shadow:0 22px 40px -20px rgba(14,26,58,.28);border-color:var(--line);}
-  .prod-media{
-    aspect-ratio:1/0.95;
-    background:linear-gradient(155deg,var(--fog) 0%, #eef0f7 100%);
-    display:flex;align-items:center;justify-content:center;position:relative;
-  }
-  .prod-media .glasses-icon{width:64%;color:var(--navy);}
-  .badge{
-    position:absolute;top:12px;left:12px;
-    font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.04em;
-    padding:5px 9px;border-radius:2px;color:var(--white);text-transform:uppercase;
-  }
-  .badge.sale{background:var(--blue);}
-  .badge.new{background:var(--ink);}
-  .badge.best{background:var(--navy);}
-  .prod-body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:8px;flex:1;}
-  .prod-cat{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--gray);text-transform:uppercase;}
-  .prod-name{font-size:16px;font-weight:600;line-height:1.3;}
-  .prod-price-row{display:flex;align-items:baseline;gap:9px;margin-top:auto;padding-top:10px;}
-  .price-now{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:600;color:var(--ink);}
-  .price-old{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gray);text-decoration:line-through;}
-  .price-off{font-size:12px;font-weight:600;color:var(--blue);}
-  .add-btn{
-    margin-top:14px;width:100%;padding:11px;border:1px solid var(--ink);
-    font-size:12.5px;font-weight:600;letter-spacing:.03em;border-radius:2px;
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    transition:background .2s ease,color .2s ease;
-  }
-  .add-btn:hover{background:var(--ink);color:var(--white);}
-
-  /* ===== OFFERS SECTION ===== */
-  .offers{
-    padding:100px 0;
-    background:linear-gradient(180deg,var(--ink),var(--navy-deep));
-    color:var(--white);
-  }
-  .offers .eyebrow{color:var(--blue-soft);}
-  .offers .eyebrow::before{background:var(--blue-soft);}
-  .offers .sec-head p{color:rgba(255,255,255,.55);}
-  .offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-  .offer-card{
-    border:1px solid rgba(255,255,255,.14);
-    border-radius:var(--radius);
-    padding:30px 26px;
-    background:rgba(255,255,255,.03);
-    position:relative;
-    transition:border-color .3s ease, background .3s ease;
-  }
-  .offer-card:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.06);}
-  .offer-tag{
-    font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:600;color:var(--blue-soft);
-    margin-bottom:16px;
-  }
-  .offer-card h3{font-size:18px;font-weight:700;margin-bottom:10px;}
-  .offer-card p{color:rgba(255,255,255,.55);font-size:13.5px;line-height:1.6;margin-bottom:18px;}
-  .offer-code{
-    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:12px;
-    border:1px dashed rgba(255,255,255,.35);padding:7px 12px;border-radius:2px;letter-spacing:.05em;
-  }
-
-  /* ===== FEATURES ===== */
-  .features{padding:100px 0;background:var(--fog);}
-  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
-  .feat-card{background:var(--white);padding:34px 30px;}
-  .feat-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--blue);margin-bottom:16px;}
-  .feat-card h3{font-size:17px;font-weight:700;margin-bottom:10px;}
-  .feat-card p{color:var(--gray);font-size:13.5px;line-height:1.65;}
-
-  /* ===== CTA STRIP ===== */
-  .cta-strip{
-    padding:90px 0;background:var(--white);
-    display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;
-    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  }
-  .cta-strip h2{font-size:clamp(26px,3vw,38px);font-weight:700;max-width:520px;letter-spacing:-.01em;}
-  .cta-strip-actions{display:flex;gap:14px;flex-wrap:wrap;}
-
-  /* ===== FOOTER ===== */
-  footer{background:var(--ink);color:rgba(255,255,255,.6);padding:70px 0 30px;}
-  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;padding-bottom:50px;border-bottom:1px solid rgba(255,255,255,.1);}
-  .foot-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-  .foot-logo .aperture{width:26px;height:26px;}
-  .foot-logo span{color:var(--white);font-family:'Space Grotesk';font-weight:700;font-size:17px;}
-  .foot-about p{font-size:13.5px;line-height:1.7;max-width:280px;}
-  .foot-col h4{color:var(--white);font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:16px;font-family:'JetBrains Mono',monospace;}
-  .foot-col li{margin-bottom:11px;font-size:13.5px;}
-  .foot-col a:hover{color:var(--white);}
-  .foot-bottom{display:flex;justify-content:space-between;padding-top:26px;font-size:12.5px;flex-wrap:wrap;gap:10px;}
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width:1000px){
-    .hero .wrap{grid-template-columns:1fr;}
-    .hero-visual{height:340px;margin-top:20px;}
-    .hero-visual .aperture{width:280px;height:280px;}
-    .hero-visual .aperture.a2{width:210px;height:210px;}
-    .hero-visual .aperture.a3{width:150px;height:150px;}
-    .glasses-hero{width:150px;}
-    .cat-grid{grid-template-columns:1fr;}
-    .prod-grid{grid-template-columns:repeat(2,1fr);}
-    .offer-grid{grid-template-columns:1fr;}
-    .feat-grid{grid-template-columns:1fr;}
-    .foot-grid{grid-template-columns:1fr 1fr;}
-    .nav-links{display:none;}
-    .burger{display:flex;}
-  }
-  @media (max-width:560px){
-    .wrap{padding:0 20px;}
-    .prod-grid{grid-template-columns:1fr 1fr;}
-    .foot-grid{grid-template-columns:1fr;}
-    .cta-strip{flex-direction:column;align-items:flex-start;}
-  }
+:root{
+  --bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#142033;--muted:#64748b;--line:#e2e8f0;
+  --primary:#4f46e5;--primaryDark:#3730a3;--primarySoft:#eef2ff;--green:#0f8a5b;--greenSoft:#e8f8f1;
+  --red:#c24141;--redSoft:#fff0f0;--amber:#a16207;--amberSoft:#fff8e6;--cyan:#0e7490;--cyanSoft:#ecfeff;
+  --shadow:0 16px 44px rgba(15,23,42,.08);--shadow2:0 6px 20px rgba(15,23,42,.06);--radius:18px
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#eef2ff 0,#f7f9fc 250px);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{position:sticky;top:0;z-index:30;background:linear-gradient(135deg,#111827,#312e81 62%,#4f46e5);color:#fff;box-shadow:0 10px 32px rgba(15,23,42,.2)}
+.header-inner{max-width:1320px;margin:auto;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:18px}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.16);display:grid;place-items:center;font-size:22px}.brand-title{font-size:22px;font-weight:950;letter-spacing:-.03em}.brand-sub{font-size:12px;opacity:.76;margin-top:2px}.header-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}.header-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);padding:8px 11px;border-radius:999px;font-size:12px;font-weight:850}.clock{font-size:12px;opacity:.8}
+.wrap{max-width:1320px;margin:auto;padding:24px 20px 60px}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:22px;margin-bottom:16px}.hero h1{margin:0 0 7px;font-size:34px;letter-spacing:-.04em}.hero p{margin:0;color:var(--muted);font-size:14px;max-width:780px}.hero-chip{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow2);padding:10px 13px;border-radius:14px;font-size:12px;font-weight:850;color:#475569}.live-dot{width:8px;height:8px;display:inline-block;border-radius:50%;background:#16a34a;margin-right:7px;box-shadow:0 0 0 4px rgba(22,163,74,.1)}
+.tabs{display:flex;gap:8px;overflow:auto;padding:4px;margin-bottom:18px}.tabs button{white-space:nowrap;border:1px solid var(--line);background:#fff;color:#364152;border-radius:12px;padding:11px 14px;font-weight:900;box-shadow:0 3px 12px rgba(29,45,80,.04)}.tabs button.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 8px 18px rgba(79,70,229,.23)}
+.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow2);min-width:0}.label{color:var(--muted);font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.07em}.num{font-size:24px;font-weight:950;margin-top:7px;letter-spacing:-.03em}.subnum{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}.num.greenTxt{color:var(--green)}.num.redTxt{color:var(--red)}
+.grid{display:grid;grid-template-columns:1.35fr .65fr;gap:15px;margin-top:15px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:15px}.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}.panel h2{margin:0 0 12px;font-size:18px;letter-spacing:-.02em}.panel h3{font-size:14px;margin:20px 0 10px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px}.muted{color:var(--muted)}.small{font-size:12px}
+input,select,textarea{padding:11px 12px;border:1px solid #d8e0ea;border-radius:11px;background:#fff;outline:none;color:var(--text);width:100%;min-width:0}textarea{resize:vertical;min-height:90px}input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1)}.btn{border:0;border-radius:11px;padding:10px 13px;font-weight:900;transition:.15s transform,.15s box-shadow,.15s background}.btn:hover{transform:translateY(-1px)}.primary{background:var(--primary);color:#fff}.primary:hover{background:var(--primaryDark)}.soft{background:var(--primarySoft);color:#4338ca}.green{background:var(--greenSoft);color:var(--green)}.danger{background:var(--redSoft);color:var(--red)}.amber{background:var(--amberSoft);color:var(--amber)}.cyan{background:var(--cyanSoft);color:var(--cyan)}.ghost{background:#fff;border:1px solid var(--line);color:#475569}.wide{width:100%}
+.pill{display:inline-block;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:950;background:var(--greenSoft);color:var(--green)}.pill.low{background:var(--amberSoft);color:var(--amber)}.pill.sale{background:var(--primarySoft);color:#4338ca}.pill.purchase{background:#fff2e7;color:#b45309}.pill.manual{background:#eef6ff;color:#2d5c9d}.pill.expense{background:var(--redSoft);color:var(--red)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar .grow{flex:1;min-width:220px}.toolbar select{width:auto;min-width:150px}.action{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.qty{width:84px}.qty-box{display:flex;flex-direction:column;gap:4px}.qty-label{font-size:9px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.04em}.action-card{padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface2)}
+.insight{padding:13px;border:1px solid #ead9b2;background:#fffaf0;border-radius:14px;margin:8px 0}.insight.ok{background:#eefaf5;border-color:#ccebdd}.insight.blue{background:#f1f4ff;border-color:#dce2ff}.insight.red{background:#fff2f2;border-color:#f2cccc}.insight.cyan{background:#ecfeff;border-color:#bdeef7}.hidden{display:none!important}.bar{height:9px;background:#edf1f5;border-radius:99px;overflow:hidden;margin:7px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#4f46e5);border-radius:99px}.statline{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #edf0f4}.statline:last-child{border-bottom:0}.positive{color:var(--green);font-weight:950}.negative{color:var(--red);font-weight:950}.ledger{max-height:430px;overflow:auto}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse}th,td{padding:11px 8px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:middle}th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}td{font-size:13px}.empty{padding:26px;text-align:center;color:var(--muted)}.kpi-note{padding:12px;border-radius:12px;background:#f7f8fc;border:1px solid var(--line);font-size:12px;color:#526078}.hero-stat{display:flex;gap:9px;align-items:center;color:#364256;font-weight:850}.dot{width:8px;height:8px;border-radius:50%;background:var(--primary)}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.formgrid .full{grid-column:1/-1}.form-label{display:block;font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 5px}.quick-entry{background:linear-gradient(180deg,#fbfcff,#f6f8ff);border:1px solid #dfe5ff;padding:14px;border-radius:14px}.seg{display:flex;gap:7px;flex-wrap:wrap}.seg button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 10px;font-weight:850}.seg button.active{background:#eef1ff;color:#3949c7;border-color:#ccd4ff}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.feature{padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff}.feature b{display:block;margin-bottom:5px}.notice-list{display:grid;gap:8px}.notice{padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}.notice strong{display:block;margin-bottom:3px}.mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.mini-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface2)}
+.chart{padding:6px 4px 2px}.chart svg{width:100%;height:240px;display:block}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:4px}.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:9px;height:9px;border-radius:3px;display:inline-block;background:#4f46e5}.legend i.two{background:#0f8a5b}.legend i.three{background:#f59e0b}.product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.product-card{padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--surface2)}.product-card .top{display:flex;justify-content:space-between;gap:8px}.money-big{font-size:28px;font-weight:950;letter-spacing:-.04em}.divider{height:1px;background:var(--line);margin:14px 0}.empty-state{padding:20px;border:1px dashed #cbd5e1;border-radius:13px;background:#fbfcfe;color:var(--muted);text-align:center}
+.toast-wrap{position:fixed;right:18px;bottom:18px;z-index:100;display:grid;gap:9px;max-width:370px}.toast{background:#111827;color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 16px 40px rgba(0,0,0,.2);font-size:13px;line-height:1.4}.toast b{display:block;margin-bottom:3px}.modal{position:fixed;inset:0;background:rgba(15,23,42,.54);z-index:90;display:flex;align-items:center;justify-content:center;padding:16px}.modal-card{width:min(760px,96vw);background:#fff;border-radius:20px;box-shadow:0 28px 80px rgba(15,23,42,.28);overflow:hidden}.modal-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.modal-head h3{margin:0;font-size:18px}.modal-body{padding:18px}.modal-actions{padding:14px 18px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}.close{border:0;background:#f1f5f9;border-radius:10px;padding:8px 10px;font-weight:900}.receipt{border:1px solid #dbe3ec;border-radius:14px;padding:22px;background:#fff}.receipt-head{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid #e5e7eb;padding-bottom:14px}.receipt-title{font-size:22px;font-weight:950}.receipt-table{margin-top:14px}.receipt-total{display:flex;justify-content:space-between;font-size:20px;font-weight:950;margin-top:14px;padding-top:14px;border-top:2px solid #e5e7eb}
+.ai-usp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:15px}
+.usp-card{background:linear-gradient(145deg,#ffffff,#f7f8ff);border:1px solid #dfe4ff;border-radius:16px;padding:16px;box-shadow:var(--shadow2)}
+.usp-card .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:950;color:var(--muted)}
+.usp-card .usp-value{font-size:30px;font-weight:950;letter-spacing:-.04em;margin-top:5px}
+.score-wrap{display:flex;align-items:center;gap:14px}.score-ring{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--primary) 0deg,#e9edf6 0deg);position:relative;flex:none}.score-ring:after{content:'';width:54px;height:54px;border-radius:50%;background:#fff;position:absolute}.score-ring b{position:relative;z-index:1;font-size:17px}.copilot-list{display:grid;gap:10px}.copilot-action{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff}.copilot-action .tag{font-size:9px;font-weight:950;text-transform:uppercase;padding:5px 7px;border-radius:999px;background:var(--primarySoft);color:#4338ca;white-space:nowrap}.sim-result{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.sim-kpi{padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--surface2)}.sim-kpi b{font-size:18px}.risk-number{font-size:26px;font-weight:950;letter-spacing:-.03em}.status-buy{background:var(--greenSoft);color:var(--green)}.status-hold{background:var(--amberSoft);color:var(--amber)}.status-monitor{background:#eef6ff;color:#2d5c9d}
+@media(max-width:1100px){.ai-usp-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.ai-usp-grid{grid-template-columns:1fr}.sim-result{grid-template-columns:1fr}}
+.print-only{display:none}
+body.printing *{visibility:hidden!important}body.printing .modal,body.printing .modal *{visibility:visible!important}body.printing .modal{background:#fff;position:absolute;inset:0;display:block;padding:0}body.printing .modal-card{box-shadow:none;width:100%;border-radius:0}body.printing .modal-head,body.printing .modal-actions{display:none}body.printing .modal-body{padding:30px}body.printing .receipt{border:0}.footer{text-align:center;color:var(--muted);padding:28px 0 0;font-size:12px}
+@media(max-width:1100px){.cards{grid-template-columns:repeat(3,1fr)}.grid,.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.feature-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.cards{grid-template-columns:1fr 1fr}.hero{display:block}.hero-chip{display:inline-block;margin-top:12px}.wrap{padding:18px 12px 45px}.header-inner{padding:12px}.header-right{display:none}.formgrid{grid-template-columns:1fr}.formgrid .full{grid-column:auto}.feature-grid,.grid3,.product-grid{grid-template-columns:1fr}.panel{overflow:hidden}.hero h1{font-size:28px}.tabs{margin-bottom:14px}.tabs button{padding:10px 12px}.mini-grid{grid-template-columns:1fr}.table-wrap{margin:0 -2px}.modal{align-items:flex-end}.modal-card{width:100%;max-height:92vh;overflow:auto}.receipt-head{display:block}.receipt-head>div+div{margin-top:10px}}
 </style>
 </head>
 <body>
-
-<!-- ===================== NAV ===================== -->
-<header id="siteHeader">
-  <div class="wrap">
-    <nav>
-      <a href="#top" class="logo">
-        <span class="aperture">
-          <svg viewBox="0 0 40 40" class="spin-slow"><circle class="ring" cx="20" cy="20" r="18" stroke="#5c7cf0"/><circle class="ring" cx="20" cy="20" r="12" stroke="#5c7cf0" stroke-opacity=".6"/><circle cx="20" cy="20" r="3" fill="#5c7cf0"/></svg>
-        </span>
-        <span class="logo-text">SPECTRA</span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="#categories">Categories</a></li>
-        <li><a href="#shop">Shop</a></li>
-        <li><a href="#offers">Offers</a></li>
-        <li><a href="#why">Why Spectra</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <div class="nav-right">
-        <a href="#shop" class="btn btn-outline" style="padding:11px 20px;">Book Eye Test</a>
-        <div class="burger" id="burger"><span></span><span></span><span></span></div>
-      </div>
-    </nav>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">✦</div>
+      <div><div class="brand-title">BizBuddy <span style="opacity:.72">AI 5.2</span></div><div class="brand-sub">Inventory + computerised billing + Tracker + business intelligence</div></div>
+    </div>
+    <div class="header-right"><div class="header-badge">● Live demo mode · Data saved in browser</div><div class="clock" id="clock"></div></div>
   </div>
 </header>
 
-<!-- ===================== HERO ===================== -->
-<section class="hero" id="top">
-  <div class="wrap">
-    <div class="hero-copy">
-      <div class="eyebrow">Eyewear studio · Est. 2016</div>
-      <h1>Clarity has<br>a <em>colour.</em></h1>
-      <p class="lede">Spectra makes eyeglasses, sunglasses and frames for people who notice detail — precision-cut lenses, hand-finished frames, fitted to your face in-store or at home.</p>
-      <div class="hero-actions">
-        <a href="#shop" class="btn btn-primary">Shop the collection</a>
-        <a href="#offers" class="btn btn-outline">View current offers</a>
-      </div>
-      <div class="stat-row">
-        <div class="stat"><b>500+</b><span>Frame styles</span></div>
-        <div class="stat"><b>UV400</b><span>All sun lenses</span></div>
-        <div class="stat"><b>24 MO</b><span>Frame warranty</span></div>
-        <div class="stat"><b>4.8/5</b><span>12,000+ reviews</span></div>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <span class="aperture a1 spin-slow"><svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="98" stroke="rgba(255,255,255,.14)"/><circle class="ring" cx="100" cy="100" r="98" stroke="#3a5be0" stroke-dasharray="4 10" stroke-opacity=".6"/></svg></span>
-      <span class="aperture a2 spin-slow-rev"><svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="98" stroke="rgba(255,255,255,.18)"/></svg></span>
-      <span class="aperture a3 spin-slow"><svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="98" stroke="#5c7cf0" stroke-opacity=".5"/></svg></span>
-      <svg class="glasses-hero" viewBox="0 0 240 90" fill="none">
-        <path d="M15 45c0-14 10-24 30-24h20c10 0 16 6 18 14 2-8 8-14 18-14h20c20 0 30 10 30 24" stroke="#eef0f7" stroke-width="3"/>
-        <circle cx="63" cy="50" r="34" fill="#16265c" fill-opacity=".9" stroke="#eef0f7" stroke-width="3"/>
-        <circle cx="177" cy="50" r="34" fill="#16265c" fill-opacity=".9" stroke="#eef0f7" stroke-width="3"/>
-        <path d="M97 44c6-6 16-6 22 0" stroke="#eef0f7" stroke-width="3"/>
-        <path d="M8 44 L2 40" stroke="#eef0f7" stroke-width="3" stroke-linecap="round"/>
-        <path d="M232 44 L238 40" stroke="#eef0f7" stroke-width="3" stroke-linecap="round"/>
-      </svg>
-    </div>
+<div class="wrap">
+  <div class="hero">
+    <div><h1>Business & Money Command Center</h1><p>Sell with a computerised bill, buy with any quantity, and let every sale or purchase automatically appear in <b>Tracker</b>, analysis, charts and AI insights.</p></div>
+    <div class="hero-chip"><span class="live-dot"></span>Automatic money flow is ON</div>
   </div>
-</section>
 
-<!-- ===================== OFFERS TICKER ===================== -->
-<div class="ticker-band">
-  <div class="ticker-track">
-    <span>FLAT 20% OFF ON POLARIZED SUNGLASSES — CODE SPEC20</span>
-    <span>BUY 1 FRAME, GET LENS PACKAGE FREE</span>
-    <span>FREE ANTI-GLARE COATING ON ORDERS ABOVE ₹1,500</span>
-    <span>FESTIVE SALE — UP TO 40% OFF SITEWIDE</span>
-    <span>FREE HOME EYE TEST ON ORDERS ABOVE ₹2,000</span>
-    <span>FLAT 20% OFF ON POLARIZED SUNGLASSES — CODE SPEC20</span>
-    <span>BUY 1 FRAME, GET LENS PACKAGE FREE</span>
-    <span>FREE ANTI-GLARE COATING ON ORDERS ABOVE ₹1,500</span>
-    <span>FESTIVE SALE — UP TO 40% OFF SITEWIDE</span>
-    <span>FREE HOME EYE TEST ON ORDERS ABOVE ₹2,000</span>
+  <div class="tabs">
+    <button class="active" data-t="dash">🏠 Dashboard</button><button data-t="inv">📦 Inventory</button><button data-t="money">💰 Tracker</button><button data-t="biz">📊 Business Analysis</button><button data-t="fin">🧾 Financial Analysis</button><button data-t="orders">🤖 AI Orders</button><button data-t="copilot">🧠 AI Copilot</button><button data-t="ai">💬 AI Assistant</button>
   </div>
+
+  <section id="dash">
+    <div class="cards">
+      <div class="card"><div class="label">Today's Sales</div><div class="num" id="todaySales">₹0</div><div class="subnum">Sales automatically become Tracker income</div></div>
+      <div class="card"><div class="label">Today's Expenses</div><div class="num redTxt" id="todayExpense">₹0</div><div class="subnum">Purchases + manual expenses</div></div>
+      <div class="card"><div class="label">Today's Profit</div><div class="num greenTxt" id="todayProfit">₹0</div><div class="subnum">Sales − product cost − manual expenses*</div></div>
+      <div class="card"><div class="label">Tracker Balance</div><div class="num" id="dashBalance">₹0</div><div class="subnum">All income − all expenses</div></div>
+      <div class="card"><div class="label">Inventory at Cost</div><div class="num" id="dashInventory">₹0</div><div class="subnum">Current stock investment</div></div>
+      <div class="card"><div class="label">Needs Attention</div><div class="num" id="dashAttention">0</div><div class="subnum">Low stock + AI recommendations</div></div>
+    </div>
+
+    <div class="grid">
+      <div class="panel"><div class="section-title"><h2>🤖 AI Business Brief</h2><span class="pill">Explainable AI</span></div><div id="brief"></div></div>
+      <div class="panel"><h2>🔔 Today's Priorities</h2><div id="priorities" class="notice-list"></div><div class="kpi-note" style="margin-top:10px">Sell in <b>Inventory</b> to create a bill + income automatically. Buy to create a purchase record + expense automatically.</div></div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel"><div class="section-title"><h2>📈 7-Day Money Flow</h2><span class="small muted">Income vs expenses</span></div><div class="chart" id="cashChart"></div><div class="legend"><span><i></i>Income</span><span><i class="two"></i>Expenses</span></div></div>
+      <div class="panel"><h2>⚡ Quick Actions</h2><div class="feature-grid"><div class="feature"><b>🧾 Sell & Bill</b><span class="small muted">Choose quantity, create a bill and record income.</span></div><div class="feature"><b>🛍 Buy & Expense</b><span class="small muted">Choose quantity and record the exact purchase cost.</span></div><div class="feature"><b>🤖 AI Orders</b><span class="small muted">Review demand-based purchase recommendations.</span></div></div></div>
+    </div>
+
+    <div class="grid2"><div class="panel"><h2>🧾 Recent Money Activity</h2><div class="table-wrap ledger"><table><thead><tr><th>Time</th><th>Type</th><th>Description</th><th>Amount</th></tr></thead><tbody id="recentRows"></tbody></table></div></div><div class="panel"><h2>📦 Stock Watch</h2><div id="stockWatch"></div></div></div>
+  </section>
+
+  <section id="inv" class="hidden">
+    <div class="grid"><div class="panel"><div class="section-title"><div><h2>📦 Inventory & Billing</h2><div class="small muted">Every sale creates a computerised bill and Tracker income. Every purchase creates Tracker expense.</div></div><button class="btn primary" id="openAdd">＋ Add Product</button></div>
+      <div class="toolbar" style="margin-top:14px"><input class="grow" id="search" placeholder="Search product or category…"><select id="stockFilter"><option value="all">All stock</option><option value="low">Low stock</option><option value="healthy">Healthy stock</option></select></div>
+      <div class="table-wrap"><table><thead><tr><th>Product</th><th>Stock</th><th>Sold</th><th>Sell Price</th><th>Status</th><th>Sell + Bill</th><th>Buy + Expense</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div><div class="panel"><h2>🔗 Automatic Connections</h2><div class="insight ok"><b>Sale → Bill → Tracker Income</b><br>When the sales person completes a sale, stock reduces, a bill is generated, and the sale value appears in Tracker immediately.</div><div class="insight blue"><b>Purchase → Expense</b><br>When you buy stock, the quantity increases and the purchase cost appears in Tracker as an expense immediately.</div><div class="insight"><b>AI Order → Inventory + Expense</b><br>Approving an AI recommendation adds the chosen quantity and creates a purchase expense.</div><div class="insight cyan"><b>One source of truth</b><br>Inventory, Tracker, Business Analysis and Financial Analysis refresh together after every sale or purchase.</div></div></div>
+    <div class="panel" style="margin-top:15px"><h2>🧾 Recent Bills & Purchase Records</h2><div class="table-wrap"><table><thead><tr><th>Record</th><th>Number</th><th>Product</th><th>Qty</th><th>Amount</th><th>Date</th><th>Action</th></tr></thead><tbody id="docRows"></tbody></table></div></div>
+  </section>
+
+  <section id="money" class="hidden">
+    <div class="cards">
+      <div class="card"><div class="label">All Income</div><div class="money-big positive" id="tIncome">₹0</div></div><div class="card"><div class="label">All Expenses</div><div class="money-big negative" id="tExpense">₹0</div></div><div class="card"><div class="label">Tracker Balance</div><div class="money-big" id="tBalance">₹0</div></div><div class="card"><div class="label">Business Sales</div><div class="num" id="tBizSales">₹0</div><div class="subnum">Auto income</div></div><div class="card"><div class="label">Business Purchases</div><div class="num redTxt" id="tBizPurch">₹0</div><div class="subnum">Auto expense</div></div><div class="card"><div class="label">Manual Entries</div><div class="num" id="tManual">0</div><div class="subnum">Personal / other money</div></div>
+    </div>
+    <div class="grid" style="margin-top:15px"><div class="panel"><h2>＋ Add Tracker Entry</h2><form id="moneyform" class="quick-entry"><div class="formgrid"><div><label class="form-label">Type</label><select id="mtype"><option value="income">Income</option><option value="expense">Expense</option></select></div><div><label class="form-label">Category</label><input id="mcat" placeholder="e.g. Salary, Electricity, Travel" required></div><div><label class="form-label">Amount</label><input id="mamount" type="number" min="0.01" step="0.01" placeholder="₹" required></div><div><label class="form-label">Date</label><input id="mdate" type="date"></div><div class="full"><label class="form-label">Description</label><input id="mdesc" placeholder="What was this money movement for?"></div></div><button class="btn primary wide" style="margin-top:10px">Add to Tracker</button></form></div>
+    <div class="panel"><h2>💰 How money moves</h2><div class="statline"><span>Sales income</span><b class="positive">+ automatically</b></div><div class="statline"><span>Stock purchases</span><b class="negative">− automatically</b></div><div class="statline"><span>Manual income</span><b class="positive">+ manually added</b></div><div class="statline"><span>Manual expenses</span><b class="negative">− manually added</b></div><div class="insight blue"><b>Example</b><br>Sell 5 notebooks for ₹250 → Tracker Income +₹250. Buy 20 pens at ₹5 each → Tracker Expense −₹100. Both are visible in the same ledger.</div></div></div>
+    <div class="panel" style="margin-top:15px"><div class="section-title"><h2>📒 Unified Tracker Ledger</h2><div class="seg"><button data-filter="all" class="active">All</button><button data-filter="income">Income</button><button data-filter="expense">Expense</button></div></div><div class="table-wrap ledger"><table><thead><tr><th>Type</th><th>Source</th><th>Category</th><th>Description</th><th>Amount</th><th>Date</th></tr></thead><tbody id="trackerRows"></tbody></table></div></div>
+  </section>
+
+  <section id="biz" class="hidden">
+    <div class="grid3"><div class="panel"><h2>🏆 Fast Mover</h2><div class="money-big" id="fastName">—</div><div class="small muted" id="fastInfo">—</div></div><div class="panel"><h2>🐢 Slow Mover</h2><div class="money-big" id="slowName">—</div><div class="small muted" id="slowInfo">—</div></div><div class="panel"><h2>📦 Inventory Investment</h2><div class="money-big" id="invInvestment">₹0</div><div class="small muted">Current stock valued at cost price</div></div></div>
+    <div class="grid"><div class="panel"><h2>Product Performance</h2><div class="product-grid" id="productPerf"></div></div><div class="panel"><h2>Demand & Restock Analysis</h2><div id="demand"></div></div></div>
+  </section>
+
+  <section id="fin" class="hidden">
+    <div class="cards"><div class="card"><div class="label">Revenue</div><div class="num" id="frev">₹0</div></div><div class="card"><div class="label">Cost of Goods Sold*</div><div class="num" id="cogs">₹0</div></div><div class="card"><div class="label">Purchases</div><div class="num redTxt" id="purch">₹0</div></div><div class="card"><div class="label">Manual Expenses</div><div class="num redTxt" id="other">₹0</div></div><div class="card"><div class="label">Gross Profit*</div><div class="num greenTxt" id="gross">₹0</div></div><div class="card"><div class="label">Margin*</div><div class="num" id="margin">0%</div></div></div>
+    <div class="grid"><div class="panel"><h2>📊 Financial Story</h2><div id="fins"></div></div><div class="panel"><h2>💸 Expense Breakdown</h2><div id="break"></div></div></div>
+    <div class="panel" style="margin-top:15px"><div class="section-title"><div><h2>📈 Live Financial Activity Trend</h2><div class="small muted">Every sale, purchase or Tracker expense creates a new point in the chart.</div></div><span class="pill">Last 10 activities</span></div><div class="chart" id="financeChart"></div><div class="legend"><span><i></i>Money In</span><span><i class="two"></i>Money Out</span><span><i class="three"></i>Net Impact</span></div><div class="small muted" style="margin-top:7px">Business sales and business purchases come from Inventory automatically; manual Tracker entries are included too.</div></div>
+  </section>
+
+  <section id="orders" class="hidden">
+    <div class="grid"><div class="panel"><div class="section-title"><h2>🤖 AI Purchase Recommendations</h2><span class="pill">Demand-based</span></div><p class="muted small">Review the recommended quantity, then approve. Approval immediately increases stock and records the purchase expense in Tracker.</p><div id="orderslist"></div></div><div class="panel"><h2>🧠 Why did AI recommend this?</h2><div class="insight blue"><b>1. Recent sales</b><br>The prototype uses recorded sales to estimate weekly demand.</div><div class="insight blue"><b>2. Safety buffer</b><br>It targets a buffer above estimated weekly demand to reduce stockout risk.</div><div class="insight blue"><b>3. Current stock</b><br>The recommendation fills the gap between current stock and the target.</div><div class="insight ok"><b>Transparent AI prototype</b><br>No real supplier, bank, payment gateway or external order is contacted. The demo makes the logic visible to judges.</div></div></div>
+    <div class="panel" style="margin-top:15px"><h2>📋 Purchase Order History</h2><div class="table-wrap"><table><thead><tr><th>Order</th><th>Product</th><th>Qty</th><th>Cost</th><th>Status</th><th>Date</th></tr></thead><tbody id="orderRows"></tbody></table></div></div>
+  </section>
+
+  <section id="copilot" class="hidden">
+    <div class="section-title"><div><h2>🧠 BizBuddy AI Copilot</h2><div class="small muted">A decision layer that watches sales, stock, profit and cash — then recommends what to do next.</div></div><span class="pill">USP Intelligence Layer</span></div>
+    <div class="ai-usp-grid">
+      <div class="usp-card"><div class="eyebrow">Business Health</div><div class="score-wrap" style="margin-top:8px"><div class="score-ring" id="healthRing"><b id="healthScore">0</b></div><div><div class="small muted" id="healthLabel">Calculating…</div><div class="small muted" id="healthWhy">Sales, margin, stock, risk and cash.</div></div></div></div>
+      <div class="usp-card"><div class="eyebrow">Money at Risk</div><div class="risk-number" id="moneyRisk">₹0</div><div class="small muted" id="moneyRiskText">Slow/dead-stock exposure.</div></div>
+      <div class="usp-card"><div class="eyebrow">Smart Reorders</div><div class="usp-value" id="smartReorders">0</div><div class="small muted">High-confidence purchase recommendations.</div></div>
+      <div class="usp-card"><div class="eyebrow">Anomaly Watch</div><div class="usp-value" id="anomalyCount">0</div><div class="small muted" id="anomalyText">Unusual expense patterns detected.</div></div>
+    </div>
+    <div class="grid">
+      <div class="panel"><div class="section-title"><h2>☀️ Today's AI Business Brief</h2><span class="pill">Actionable</span></div><div id="copilotBrief"></div></div>
+      <div class="panel"><div class="section-title"><h2>⚡ What should I do today?</h2><span class="small muted">Prioritized by AI</span></div><div class="copilot-list" id="copilotActions"></div></div>
+    </div>
+    <div class="grid">
+      <div class="panel"><div class="section-title"><h2>🧪 What-If Business Simulator</h2><span class="pill">Decision Lab</span></div><div class="formgrid"><div><label class="form-label">Product</label><select id="simProduct"></select></div><div><label class="form-label">Simulated selling price</label><input id="simPrice" type="number" min="0" step="0.01"></div><div><label class="form-label">Expected units / month</label><input id="simUnits" type="number" min="0" step="1"></div><div><label class="form-label">Extra stock purchase</label><input id="simOrder" type="number" min="0" step="1" value="0"></div></div><div class="sim-result"><div class="sim-kpi"><span class="small muted">Revenue</span><br><b id="simRevenue">₹0</b></div><div class="sim-kpi"><span class="small muted">Gross profit</span><br><b id="simProfit">₹0</b></div><div class="sim-kpi"><span class="small muted">Cash after stock buy*</span><br><b id="simCash">₹0</b></div></div><div id="simInsight" class="insight blue" style="margin-top:10px"></div><div class="small muted">*Scenario only; it does not change your real data until you actually buy or sell.</div></div>
+      <div class="panel"><div class="section-title"><h2>🛑 Dead Stock & Money-at-Risk</h2><span class="pill">Protect cash</span></div><div id="riskList"></div></div>
+    </div>
+    <div class="panel" style="margin-top:15px"><div class="section-title"><div><h2>🧠 Smart Reorder Engine</h2><div class="small muted">AI considers current stock + estimated demand + unit margin before recommending a purchase.</div></div><span class="pill">Demand + Profit</span></div><div id="smartReorderList"></div></div>
+    <div class="panel" style="margin-top:15px"><div class="section-title"><h2>🚨 AI Anomaly Watch</h2><span class="small muted">Large or unusual money movements</span></div><div id="anomalyList"></div></div>
+  </section>
+
+  <section id="ai" class="hidden">
+    <div class="grid"><div class="panel"><h2>💬 AI Business Assistant</h2><div id="chat" style="height:330px;overflow:auto;background:#f7f9fc;border-radius:13px;padding:10px"><div class="msg bot">Hi! I can analyze your sales, bills, purchases, Tracker balance, product profit, stock alerts and AI recommendations.</div></div><div style="display:flex;gap:8px;margin-top:8px"><input id="q" placeholder="Ask: How much did we sell today? Why is Pen being recommended?" style="flex:1"><button class="btn primary" id="ask">Ask</button></div><div class="seg" style="margin-top:10px"><button class="askq">What did we sell today?</button><button class="askq">Where is my money going?</button><button class="askq">What should I purchase?</button><button class="askq">Which product makes the most margin?</button></div></div><div class="panel"><h2>✨ AI Insights</h2><div id="aiInsights"></div></div></div>
+  </section>
+
+  <div class="footer">BizBuddy AI 5.2 is an exhibition prototype with an AI decision-support layer. Computerised bills and purchase records are generated in-browser. AI demand recommendations are transparent, rule-based estimates; no real bank, payment gateway or supplier is contacted.</div>
 </div>
 
-<!-- ===================== CATEGORIES ===================== -->
-<section class="categories" id="categories">
-  <div class="wrap">
-    <div class="sec-head">
-      <div>
-        <div class="eyebrow">Browse</div>
-        <h2>Three shapes.<br>One standard.</h2>
-      </div>
-      <p>Every pair — sunglasses, eyeglasses or a bare frame — is built on the same optical bench, so fit and finish never vary.</p>
-    </div>
-    <div class="cat-grid">
-      <div class="cat-card">
-        <span class="count mono">01 / SUN</span>
-        <span class="aperture"><svg viewBox="0 0 120 120"><circle class="ring" cx="60" cy="60" r="55" stroke="currentColor" stroke-opacity=".25"/><circle cx="42" cy="60" r="20" fill="currentColor" fill-opacity=".85"/><circle cx="78" cy="60" r="20" fill="currentColor" fill-opacity=".85"/><path d="M62 55c3-4 9-4 12 0" stroke="currentColor" stroke-width="2"/></svg></span>
-        <h3>Sunglasses</h3>
-        <p>UV400-rated, polarized on request. Aviator, wayfarer, round and sport builds from ₹1,299.</p>
-        <a href="#shop" class="cat-link">Shop sunglasses →</a>
-      </div>
-      <div class="cat-card">
-        <span class="count mono">02 / OPT</span>
-        <span class="aperture"><svg viewBox="0 0 120 120"><circle class="ring" cx="60" cy="60" r="55" stroke="currentColor" stroke-opacity=".25"/><circle cx="42" cy="60" r="19" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="78" cy="60" r="19" fill="none" stroke="currentColor" stroke-width="4"/><path d="M61 58c3-4 9-4 12 0" stroke="currentColor" stroke-width="3"/></svg></span>
-        <h3>Eyeglasses</h3>
-        <p>Prescription-ready with blue-light and anti-glare coatings included. From ₹899.</p>
-        <a href="#shop" class="cat-link">Shop eyeglasses →</a>
-      </div>
-      <div class="cat-card">
-        <span class="count mono">03 / RAW</span>
-        <span class="aperture"><svg viewBox="0 0 120 120"><circle class="ring" cx="60" cy="60" r="55" stroke="currentColor" stroke-opacity=".25"/><rect x="24" y="46" width="28" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="4"/><rect x="68" y="46" width="28" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="4"/><path d="M52 54h16" stroke="currentColor" stroke-width="3"/></svg></span>
-        <h3>Bare Frames</h3>
-        <p>Titanium, acetate and flex builds. Bring your own lenses or add ours. From ₹1,599.</p>
-        <a href="#shop" class="cat-link">Shop frames →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== PRODUCTS ===================== -->
-<section class="products" id="shop">
-  <div class="wrap">
-    <div class="sec-head">
-      <div>
-        <div class="eyebrow">Catalog</div>
-        <h2>Bestsellers &amp; new arrivals</h2>
-      </div>
-      <p>Prices include standard single-vision lenses where applicable. Filter by category.</p>
-    </div>
-
-    <div class="filter-row" id="filterRow">
-      <button class="filter-btn active" data-filter="all">All products</button>
-      <button class="filter-btn" data-filter="sun">Sunglasses</button>
-      <button class="filter-btn" data-filter="opt">Eyeglasses</button>
-      <button class="filter-btn" data-filter="frame">Frames</button>
-      <button class="filter-btn" data-filter="kids">Kids</button>
-    </div>
-
-    <div class="prod-grid" id="prodGrid"><!-- injected by JS --></div>
-  </div>
-</section>
-
-<!-- ===================== OFFERS ===================== -->
-<section class="offers" id="offers">
-  <div class="wrap">
-    <div class="sec-head">
-      <div>
-        <div class="eyebrow">Current offers</div>
-        <h2>Save more,<br>see better.</h2>
-      </div>
-      <p>Offers run through the end of the month and can be combined with your insurance benefit where applicable.</p>
-    </div>
-    <div class="offer-grid">
-      <div class="offer-card">
-        <div class="offer-tag">40%</div>
-        <h3>Festive Sale</h3>
-        <p>Up to 40% off sitewide on sunglasses and eyeglasses. Automatically applied at checkout — no code needed.</p>
-        <span class="offer-code">AUTO-APPLIED</span>
-      </div>
-      <div class="offer-card">
-        <div class="offer-tag">B1G1</div>
-        <h3>Frames, doubled</h3>
-        <p>Buy any frame and get a second frame of equal or lower value at 50% off. Mix sunglasses with eyeglasses.</p>
-        <span class="offer-code">CODE: SPECTRA2</span>
-      </div>
-      <div class="offer-card">
-        <div class="offer-tag">20%</div>
-        <h3>Polarized sunglasses</h3>
-        <p>Flat 20% off every polarized sunglass style, including aviators and sports wraps.</p>
-        <span class="offer-code">CODE: SPEC20</span>
-      </div>
-      <div class="offer-card">
-        <div class="offer-tag">FREE</div>
-        <h3>Coatings included</h3>
-        <p>Free anti-glare and scratch-resistant coating on any eyeglasses order above ₹1,500.</p>
-        <span class="offer-code">AUTO-APPLIED</span>
-      </div>
-      <div class="offer-card">
-        <div class="offer-tag">₹0</div>
-        <h3>Home eye test</h3>
-        <p>Free at-home vision test with orders above ₹2,000 in select cities, scheduled within 48 hours.</p>
-        <span class="offer-code">AUTO-APPLIED</span>
-      </div>
-      <div class="offer-card">
-        <div class="offer-tag">15%</div>
-        <h3>Student &amp; first order</h3>
-        <p>15% off your first Spectra order with a valid student ID or new-customer sign-up.</p>
-        <span class="offer-code">CODE: FIRST15</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== FEATURES ===================== -->
-<section class="features" id="why">
-  <div class="wrap">
-    <div class="sec-head">
-      <div>
-        <div class="eyebrow">Why Spectra</div>
-        <h2>What's standard, not extra</h2>
-      </div>
-      <p>These come with every pair, no matter the price point.</p>
-    </div>
-    <div class="feat-grid">
-      <div class="feat-card"><div class="feat-num">/ 01</div><h3>UV400 protection</h3><p>Every sun lens blocks 100% of UVA and UVB — tested per pair, not per batch.</p></div>
-      <div class="feat-card"><div class="feat-num">/ 02</div><h3>Blue-light filtering</h3><p>Included free on all eyeglasses for screen-heavy days, with no visible tint.</p></div>
-      <div class="feat-card"><div class="feat-num">/ 03</div><h3>24-month warranty</h3><p>Frame and hinge coverage against manufacturing defects, no fine print.</p></div>
-      <div class="feat-card"><div class="feat-num">/ 04</div><h3>Free adjustments</h3><p>Walk into any Spectra store, any time, for a fit check — for the life of the frame.</p></div>
-      <div class="feat-card"><div class="feat-num">/ 05</div><h3>7-day try-on</h3><p>Order up to 4 frames, try them at home, return what doesn't fit at no cost.</p></div>
-      <div class="feat-card"><div class="feat-num">/ 06</div><h3>Prescription support</h3><p>Upload a prescription or book a free in-store test before you order lenses.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== CTA STRIP ===================== -->
-<section class="cta-strip">
-  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;">
-    <h2>Not sure what fits your face? Book a free 15-minute fitting, in-store or on video.</h2>
-    <div class="cta-strip-actions">
-      <a href="#contact" class="btn btn-dark">Book a fitting</a>
-      <a href="#shop" class="btn btn-outline" style="color:var(--ink);border-color:var(--ink);">Browse catalog</a>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== FOOTER ===================== -->
-<footer id="contact">
-  <div class="wrap">
-    <div class="foot-grid">
-      <div class="foot-about">
-        <div class="foot-logo">
-          <span class="aperture"><svg viewBox="0 0 40 40"><circle class="ring" cx="20" cy="20" r="18" stroke="#5c7cf0"/><circle cx="20" cy="20" r="3" fill="#5c7cf0"/></svg></span>
-          <span>SPECTRA</span>
-        </div>
-        <p>Eyeglasses, sunglasses and frames, fitted and finished in-house. 18 stores across India, and shipping nationwide.</p>
-      </div>
-      <div class="foot-col">
-        <h4>Shop</h4>
-        <ul>
-          <li><a href="#shop">Sunglasses</a></li>
-          <li><a href="#shop">Eyeglasses</a></li>
-          <li><a href="#shop">Frames</a></li>
-          <li><a href="#offers">Offers</a></li>
-        </ul>
-      </div>
-      <div class="foot-col">
-        <h4>Support</h4>
-        <ul>
-          <li><a href="#">Book eye test</a></li>
-          <li><a href="#">Track order</a></li>
-          <li><a href="#">Returns &amp; warranty</a></li>
-          <li><a href="#">Store locator</a></li>
-        </ul>
-      </div>
-      <div class="foot-col">
-        <h4>Contact</h4>
-        <ul>
-          <li>hello@spectra.example</li>
-          <li>+91 98765 43210</li>
-          <li>Mon–Sat, 10am–8pm</li>
-        </ul>
-      </div>
-    </div>
-    <div class="foot-bottom">
-      <span>© 2026 Spectra Eyewear. All rights reserved.</span>
-      <span>Prices inclusive of taxes. Offers cannot be combined unless stated.</span>
-    </div>
-  </div>
-</footer>
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="modal hidden" id="modal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Receipt</h3><button class="close" id="modalClose">✕</button></div><div class="modal-body" id="modalBody"></div><div class="modal-actions" id="modalActions"></div></div></div>
 
 <script>
-  // header background on scroll
-  const header = document.getElementById('siteHeader');
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 40);
+const seed=[
+{id:1,n:'Notebook',c:'Stationery',q:12,pr:50,co:30,m:5,s:18},
+{id:2,n:'Pen',c:'Stationery',q:4,pr:10,co:5,m:10,s:42},
+{id:3,n:'Water Bottle',c:'Accessories',q:25,pr:120,co:70,m:8,s:31},
+{id:4,n:'School Bag',c:'Bags',q:8,pr:450,co:300,m:5,s:9},
+{id:5,n:'Calculator',c:'Electronics',q:3,pr:650,co:450,m:5,s:6}
+];
+function readJSON(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return v==null?fallback:v}catch(e){return fallback}}
+const oldItems=readJSON('bb4items',readJSON('bb3items',null));
+const oldTx=readJSON('bb4tx',readJSON('bb3tx',null));
+const oldTracker=readJSON('bb4tracker',readJSON('bb3money',null));
+let items=readJSON('bb5items',oldItems||seed).map(normalizeItem);
+let tx=readJSON('bb5tx',oldTx||[]);
+let trackerTx=readJSON('bb5tracker',oldTracker||[]);
+let docs=readJSON('bb5docs',[]);
+let orders=readJSON('bb5orders',[]);
+let trackerFilter='all';
+
+function normalizeItem(x){return {id:x.id??Date.now()+Math.random(),n:String(x.n||'Unnamed'),c:String(x.c||'General'),q:Number(x.q)||0,pr:Number(x.pr)||0,co:Number(x.co)||0,m:Number(x.m)||0,s:Number(x.s)||0}}
+function save(){localStorage.setItem('bb5items',JSON.stringify(items));localStorage.setItem('bb5tx',JSON.stringify(tx));localStorage.setItem('bb5tracker',JSON.stringify(trackerTx));localStorage.setItem('bb5docs',JSON.stringify(docs));localStorage.setItem('bb5orders',JSON.stringify(orders))}
+const money=n=>'₹'+Math.round(Number(n)||0).toLocaleString('en-IN');
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isLow=x=>x.q<=x.m;
+function nowISO(){return new Date().toISOString()}
+function dateOnly(iso){const d=new Date(iso);return isNaN(d)?'':d.toISOString().slice(0,10)}
+function formatTime(t){if(!t)return '—';const d=new Date(t);return isNaN(d)?'—':d.toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function shortDate(t){if(!t)return '—';const d=new Date(t);return isNaN(d)?'—':d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}
+function todayKey(){return dateOnly(new Date().toISOString())}
+function stats(){
+  const r=tx.filter(x=>x.t==='sale').reduce((a,x)=>a+Number(x.a||0),0);
+  const p=tx.filter(x=>x.t==='purchase').reduce((a,x)=>a+Number(x.a||0),0);
+  const c=tx.filter(x=>x.t==='sale').reduce((a,x)=>a+Number(x.cost||0),0);
+  const mi=trackerTx.filter(x=>x.t==='income').reduce((a,x)=>a+Number(x.a||0),0);
+  const me=trackerTx.filter(x=>x.t==='expense').reduce((a,x)=>a+Number(x.a||0),0);
+  return {r,p,c,mi,me,allIncome:r+mi,allExpense:p+me,balance:r+mi-p-me,inv:items.reduce((a,x)=>a+x.q*x.co,0)}
+}
+function dayTotals(){
+  const k=todayKey();
+  const sales=tx.filter(x=>x.t==='sale'&&dateOnly(x.time)===k).reduce((a,x)=>a+x.a,0);
+  const saleCost=tx.filter(x=>x.t==='sale'&&dateOnly(x.time)===k).reduce((a,x)=>a+(x.cost||0),0);
+  const purchases=tx.filter(x=>x.t==='purchase'&&dateOnly(x.time)===k).reduce((a,x)=>a+x.a,0);
+  const manualExp=trackerTx.filter(x=>x.t==='expense'&&dateOnly(x.time)===k).reduce((a,x)=>a+x.a,0);
+  const manualInc=trackerTx.filter(x=>x.t==='income'&&dateOnly(x.time)===k).reduce((a,x)=>a+x.a,0);
+  return {sales,saleCost,purchases,manualExp,manualInc,profit:sales-saleCost-manualExp}
+}
+function demand(x){const weekly=Math.max(1,Math.ceil(Number(x.s||0)/4));const target=Math.max(x.m,Math.ceil(weekly*1.4));return {weekly,target,need:Math.max(0,target-x.q)}}
+function combinedLedger(){
+  return tx.map(x=>({id:x.id,t:x.t==='sale'?'income':'expense',source:'Business',cat:x.cat||'Business',desc:x.desc||'',a:Number(x.a||0),time:x.time,ref:x.ref||''})).concat(trackerTx.map(x=>({id:x.id,t:x.t,source:'Tracker',cat:x.cat||'Other',desc:x.d||'',a:Number(x.a||0),time:x.time,ref:x.ref||''}))).sort((a,b)=>String(b.time||'').localeCompare(String(a.time||'')));
+}
+function toast(title,msg){const box=document.getElementById('toastWrap');const t=document.createElement('div');t.className='toast';t.innerHTML='<b>'+esc(title)+'</b><span>'+esc(msg)+'</span>';box.appendChild(t);setTimeout(()=>t.remove(),4200)}
+function nextNumber(prefix){const n=Date.now().toString().slice(-7);return prefix+n}
+function addSale(x,q,customer='Walk-in Customer'){
+  const total=q*x.pr,cost=q*x.co,bill=nextNumber('INV-');
+  const row={id:Date.now()+Math.random(),t:'sale',a:total,cost,cat:'Business Sale',desc:`Sale: ${q} × ${x.n}`,time:nowISO(),product:x.n,qty:q,ref:bill,customer};
+  tx.push(row);docs.unshift({id:row.id,type:'sale',number:bill,product:x.n,qty:q,amount:total,cost,time:row.time,customer});
+  return row;
+}
+function addPurchase(x,q,supplier='Local Supplier',invoice=''){
+  const total=q*x.co,po=nextNumber('PO-');
+  const row={id:Date.now()+Math.random(),t:'purchase',a:total,cat:'Business Purchase',desc:`Purchase: ${q} × ${x.n}`,time:nowISO(),product:x.n,qty:q,ref:po,supplier,invoice};
+  tx.push(row);docs.unshift({id:row.id,type:'purchase',number:po,product:x.n,qty:q,amount:total,time:row.time,supplier,invoice});
+  orders.unshift({id:po,product:x.n,qty:q,cost:total,status:'Purchased',time:row.time,source:'Manual'});
+  return row;
+}
+function addAIPurchase(x,q){const row=addPurchase(x,q,'AI Recommended Supplier','AI-DEMO');orders[0].source='AI';orders[0].status='Approved';return row}
+function openModal(title,body,actions=''){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=body;document.getElementById('modalActions').innerHTML=actions;document.getElementById('modal').classList.remove('hidden')}
+function closeModal(){document.getElementById('modal').classList.add('hidden');document.body.classList.remove('printing')}
+document.getElementById('modalClose').onclick=closeModal;document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+function printModal(){document.body.classList.add('printing');window.print();setTimeout(()=>document.body.classList.remove('printing'),500)}
+
+function saleFlow(id){
+  const x=items.find(y=>y.id==id);if(!x)return;
+  const q=Number(document.querySelector(`.sellqty[data-id="${id}"]`)?.value);
+  if(!Number.isInteger(q)||q<1)return toast('Quantity needed','Enter a whole number of units to sell.');
+  if(q>x.q)return toast('Not enough stock',`Only ${x.q} ${x.n} unit(s) are available.`);
+  openModal('Create Computerised Bill',`<div class='formgrid'><div><label class='form-label'>Product</label><input value='${esc(x.n)}' disabled></div><div><label class='form-label'>Quantity</label><input value='${q}' disabled></div><div><label class='form-label'>Customer Name (optional)</label><input id='billCustomer' placeholder='Walk-in Customer'></div><div><label class='form-label'>Selling Price / Unit</label><input value='${money(x.pr)}' disabled></div></div><div class='insight blue' style='margin-top:14px'><b>Sale Total: ${money(q*x.pr)}</b><br>After confirming: stock will reduce by ${q}, a bill will be created, and Tracker will automatically show income of ${money(q*x.pr)}.</div>`,`<button class='btn ghost' onclick='closeModal()'>Cancel</button><button class='btn primary' id='confirmSale'>Confirm Sale & Create Bill</button>`);
+  document.getElementById('confirmSale').onclick=()=>{const customer=document.getElementById('billCustomer').value.trim()||'Walk-in Customer';x.q-=q;x.s+=q;const row=addSale(x,q,customer);save();closeModal();render();toast('Sale recorded',`${x.n}: ${q} sold · ${money(row.a)} income added to Tracker.`);setTimeout(()=>showSaleBill(row),180)}
+}
+function purchaseFlow(id){
+  const x=items.find(y=>y.id==id);if(!x)return;
+  const q=Number(document.querySelector(`.buyqty[data-id="${id}"]`)?.value);
+  if(!Number.isInteger(q)||q<1)return toast('Quantity needed','Enter a whole number of units to buy.');
+  openModal('Record Purchase & Expense',`<div class='formgrid'><div><label class='form-label'>Product</label><input value='${esc(x.n)}' disabled></div><div><label class='form-label'>Quantity</label><input value='${q}' disabled></div><div><label class='form-label'>Supplier (optional)</label><input id='purchaseSupplier' placeholder='Local Supplier'></div><div><label class='form-label'>Supplier Invoice (optional)</label><input id='purchaseInvoice' placeholder='Supplier invoice number'></div></div><div class='insight blue' style='margin-top:14px'><b>Purchase Expense: ${money(q*x.co)}</b><br>After confirming: stock will increase by ${q}, a purchase record will be created, and Tracker will automatically show an expense of ${money(q*x.co)}.</div>`,`<button class='btn ghost' onclick='closeModal()'>Cancel</button><button class='btn green' id='confirmPurchase'>Confirm Purchase & Record Expense</button>`);
+  document.getElementById('confirmPurchase').onclick=()=>{const supplier=document.getElementById('purchaseSupplier').value.trim()||'Local Supplier';const invoice=document.getElementById('purchaseInvoice').value.trim();x.q+=q;const row=addPurchase(x,q,supplier,invoice);save();closeModal();render();toast('Purchase recorded',`${x.n}: ${q} purchased · ${money(row.a)} expense added to Tracker.`);setTimeout(()=>showPurchaseReceipt(row),180)}
+}
+function showSaleBill(row){
+  openModal('Computerised Sales Bill',`<div class='receipt' id='printable'><div class='receipt-head'><div><div class='receipt-title'>BizBuddy Store</div><div class='muted small'>Computerised Sales Bill</div></div><div><b>${esc(row.ref)}</b><br><span class='small muted'>${esc(formatTime(row.time))}</span></div></div><div style='margin-top:14px'><b>Customer:</b> ${esc(row.customer)}</div><table class='receipt-table'><thead><tr><th>Product</th><th>Qty</th><th>Rate</th><th>Total</th></tr></thead><tbody><tr><td>${esc(row.product)}</td><td>${row.qty}</td><td>${money(row.a/row.qty)}</td><td>${money(row.a)}</td></tr></tbody></table><div class='receipt-total'><span>Total Paid</span><span>${money(row.a)}</span></div><div class='small muted' style='margin-top:13px'>Thank you for your purchase. This demo bill is generated by BizBuddy AI.</div></div>`,`<button class='btn ghost' onclick='closeModal()'>Close</button><button class='btn primary' onclick='printModal()'>🖨 Print Bill</button>`)
+}
+function showPurchaseReceipt(row){
+  openModal('Purchase Record',`<div class='receipt'><div class='receipt-head'><div><div class='receipt-title'>BizBuddy Store</div><div class='muted small'>Computerised Purchase Record</div></div><div><b>${esc(row.ref)}</b><br><span class='small muted'>${esc(formatTime(row.time))}</span></div></div><div style='margin-top:14px'><b>Supplier:</b> ${esc(row.supplier||'Local Supplier')} ${row.invoice?`<span class='muted'>· Invoice ${esc(row.invoice)}</span>`:''}</div><table class='receipt-table'><thead><tr><th>Product</th><th>Qty</th><th>Cost / Unit</th><th>Expense</th></tr></thead><tbody><tr><td>${esc(row.product)}</td><td>${row.qty}</td><td>${money(row.a/row.qty)}</td><td>${money(row.a)}</td></tr></tbody></table><div class='receipt-total'><span>Expense Recorded</span><span>${money(row.a)}</span></div><div class='insight ok' style='margin-top:14px'>✓ Inventory updated and the expense has already been added to Tracker.</div></div>`,`<button class='btn ghost' onclick='closeModal()'>Close</button><button class='btn primary' onclick='printModal()'>🖨 Print Record</button>`)
+}
+
+function addProductFlow(){
+  openModal('Add New Product',`<form id='addForm'><div class='formgrid'><div><label class='form-label'>Product Name</label><input id='pn' required placeholder='e.g. Marker'></div><div><label class='form-label'>Category</label><input id='pc' placeholder='General'></div><div><label class='form-label'>Starting Stock</label><input id='pq' type='number' min='0' step='1' value='0' required></div><div><label class='form-label'>Selling Price / Unit</label><input id='pp' type='number' min='0' step='0.01' required placeholder='₹'></div><div><label class='form-label'>Cost Price / Unit</label><input id='pco' type='number' min='0' step='0.01' required placeholder='₹'></div><div><label class='form-label'>Minimum Stock Level</label><input id='pm' type='number' min='0' step='1' value='5'></div></div></form>`,`<button class='btn ghost' onclick='closeModal()'>Cancel</button><button class='btn primary' id='confirmAdd'>Add Product</button>`);
+  document.getElementById('confirmAdd').onclick=()=>{const n=document.getElementById('pn').value.trim(),c=document.getElementById('pc').value.trim()||'General',q=Number(document.getElementById('pq').value),pr=Number(document.getElementById('pp').value),co=Number(document.getElementById('pco').value),m=Number(document.getElementById('pm').value);if(!n||[q,pr,co,m].some(v=>!Number.isFinite(v)||v<0))return toast('Check the form','Enter valid product details.');items.push({id:Date.now()+Math.random(),n,c,q,pr,co,m,s:0});save();closeModal();render();toast('Product added',`${n} is now available in Inventory.`)}
+}
+
+document.getElementById('openAdd').onclick=addProductFlow;
+
+document.getElementById('rows').onclick=e=>{const sell=e.target.dataset.sell,buy=e.target.dataset.buy;if(sell)saleFlow(sell);else if(buy)purchaseFlow(buy)};
+document.getElementById('orderslist').onclick=e=>{const id=e.target.dataset.order;if(!id)return;const x=items.find(y=>y.id==id);if(!x)return;const d=demand(x);if(!d.need)return toast('No purchase needed','This product already meets the target stock.');openModal('Approve AI Purchase',`<div class='insight blue'><b>${esc(x.n)}</b><br>Current stock: ${x.q}<br>Estimated weekly demand: ${d.weekly}<br>Target stock: ${d.target}<br>Recommended quantity: <b>${d.need}</b><br>Estimated expense: <b>${money(d.need*x.co)}</b></div><p class='small muted'>Approving this demo recommendation will update inventory and immediately create an expense in Tracker.</p>`,`<button class='btn ghost' onclick='closeModal()'>Cancel</button><button class='btn primary' id='approveAI'>Approve & Record Expense</button>`);document.getElementById('approveAI').onclick=()=>{x.q+=d.need;const row=addAIPurchase(x,d.need);save();closeModal();render();toast('AI order approved',`${x.n}: ${d.need} units added · ${money(row.a)} expense recorded in Tracker.`);setTimeout(()=>showPurchaseReceipt(row),180)}};
+
+document.getElementById('search').oninput=render;
+document.getElementById('stockFilter').onchange=render;
+
+document.getElementById('moneyform').onsubmit=e=>{e.preventDefault();const t=document.getElementById('mtype').value,cat=document.getElementById('mcat').value.trim(),a=Number(document.getElementById('mamount').value),d=document.getElementById('mdesc').value.trim(),date=document.getElementById('mdate').value; if(!cat||!Number.isFinite(a)||a<=0)return toast('Check the form','Enter a category and an amount greater than 0.'); trackerTx.unshift({id:Date.now()+Math.random(),t,cat,a,d,time:date?new Date(date+'T12:00:00').toISOString():nowISO(),manual:true});save();e.target.reset();document.getElementById('mdate').value=todayKey();render();toast(t==='income'?'Income added':'Expense added',`${cat}: ${money(a)} has been added to Tracker.`)};
+
+document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{trackerFilter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderTracker()});
+
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function marginPct(x){return x.pr>0?((x.pr-x.co)/x.pr*100):0}
+function lastSaleTime(x){const rows=tx.filter(t=>t.t==='sale'&&t.product===x.n);if(!rows.length)return null;return rows.reduce((m,t)=>!m||new Date(t.time)>new Date(m)?t.time:m,null)}
+function smartDecision(x){
+  const d=demand(x), m=marginPct(x), risk=x.q*x.co;
+  if(x.q>d.target*2 && d.weekly<Math.max(2,x.s/2)) return {status:'HOLD',qty:0,reason:'Stock is already above the target and demand is not strong enough for another purchase.',score:25,risk};
+  if(d.need<=0) return {status:'MONITOR',qty:0,reason:'Stock meets the AI demand target. Keep cash available for higher-priority products.',score:55,risk};
+  if(m<12) return {status:'HOLD',qty:0,reason:`Unit margin is only ${m.toFixed(1)}%. Reordering is risky until demand or pricing improves.`,score:30,risk};
+  const confidence=clamp(Math.round(40+Math.min(35,d.weekly*5)+Math.min(25,Math.max(0,m-12))),40,98);
+  return {status:'BUY',qty:d.need,reason:`Demand is about ${d.weekly}/week, stock is below target, and unit margin is ${m.toFixed(1)}%.`,score:confidence,risk};
+}
+function riskItems(){
+  const today=new Date();
+  return items.filter(x=>x.q>0).map(x=>{const last=lastSaleTime(x);const days=last?Math.floor((today-new Date(last))/86400000):9999;const d=demand(x);let riskScore=0;if(!last||days>30)riskScore=x.q*x.co;else if(x.s<5)riskScore=Math.round(x.q*x.co*.55);return {...x,days,d,riskValue:Math.round(riskScore)}}).filter(x=>x.riskValue>0).sort((a,b)=>b.riskValue-a.riskValue);
+}
+function anomalyItems(){
+  const expenses=combinedLedger().filter(x=>x.t==='expense').map(x=>Number(x.a||0)).filter(v=>v>0);if(!expenses.length)return [];
+  const avg=expenses.reduce((a,v)=>a+v,0)/expenses.length;
+  return combinedLedger().filter(x=>x.t==='expense'&&Number(x.a||0)>=Math.max(avg*1.8,avg+500)).slice(0,8).map(x=>({...x,avg}));
+}
+function healthData(){
+  const z=stats(), low=items.filter(isLow).length, total=items.length||1, ritems=riskItems(), anomalies=anomalyItems();
+  const margin=z.r?((z.r-z.c)/z.r*100):0;
+  const marginScore=clamp(margin*2,0,100);
+  const stockScore=100-(low/total*70);
+  const cashScore=z.balance>=0?100:clamp(50+(z.balance/Math.max(1,z.r+z.mi))*50,0,100);
+  const riskRatio=clamp(ritems.reduce((a,x)=>a+x.riskValue,0)/Math.max(1,z.inv),0,1);
+  const riskScore=100-riskRatio*70;
+  const anomalyScore=anomalies.length?70:100;
+  const score=Math.round(marginScore*.28+stockScore*.22+cashScore*.2+riskScore*.2+anomalyScore*.1);
+  return {score,label:score>=80?'Healthy':score>=60?'Watch':'Needs attention',low,margin,risk:ritems.reduce((a,x)=>a+x.riskValue,0),anomalies};
+}
+function updateSimulator(){
+  const x=items.find(v=>String(v.id)===String(document.getElementById('simProduct')?.value));if(!x)return;
+  const price=Math.max(0,Number(document.getElementById('simPrice').value)||0), units=Math.max(0,Number(document.getElementById('simUnits').value)||0), order=Math.max(0,Number(document.getElementById('simOrder').value)||0);
+  const revenue=price*units, profit=(price-x.co)*units, cashAfter=stats().balance+revenue-order*x.co;
+  document.getElementById('simRevenue').textContent=money(revenue);document.getElementById('simProfit').textContent=money(profit);document.getElementById('simCash').textContent=money(cashAfter);
+  const weekly=demand(x).weekly, change=x.pr?((price/x.pr-1)*100):0;
+  document.getElementById('simInsight').innerHTML=`<b>AI scenario:</b> ${change>=0?'Price rises':'Price falls'} ${Math.abs(change).toFixed(1)}% for ${esc(x.n)}. At ${units.toLocaleString('en-IN')} units/month, estimated gross profit is <b>${money(profit)}</b>. ${order?`Buying ${order} extra units would use ${money(order*x.co)} of cash.`:'No extra stock purchase included.'} Baseline demand is about ${weekly}/week.`;
+}
+function renderCopilot(){
+  const h=healthData(), ritems=riskItems(), anomalies=h.anomalies, z=stats(), smart=items.map(x=>({...x,ai:smartDecision(x)})), buy=smart.filter(x=>x.ai.status==='BUY').sort((a,b)=>b.ai.score-a.ai.score);
+  document.getElementById('healthScore').textContent=h.score;document.getElementById('healthLabel').textContent=h.label;document.getElementById('healthWhy').textContent=`${h.low} low-stock · ${h.anomalies.length} anomaly · ${money(h.risk)} at risk`;
+  const deg=h.score*3.6;document.getElementById('healthRing').style.background=`conic-gradient(var(--primary) ${deg}deg,#e9edf6 ${deg}deg)`;
+  document.getElementById('moneyRisk').textContent=money(h.risk);document.getElementById('moneyRiskText').textContent=ritems.length?`${ritems.length} product(s) contain slow/dead-stock exposure.`:'No material slow/dead-stock exposure detected.';document.getElementById('smartReorders').textContent=buy.length;document.getElementById('anomalyCount').textContent=anomalies.length;document.getElementById('anomalyText').textContent=anomalies.length?`${anomalies.length} unusual expense(s) need review.`:'No unusually large expense detected.';
+  const fast=[...items].sort((a,b)=>b.s-a.s)[0], brief=[];
+  if(buy[0])brief.push(`<div class='insight red'><b>🤖 Reorder ${esc(buy[0].n)}</b><br>${buy[0].ai.qty} units suggested. ${esc(buy[0].ai.reason)}</div>`);
+  if(ritems[0])brief.push(`<div class='insight'><b>🛑 Protect ${money(ritems[0].riskValue)}</b><br>${esc(ritems[0].n)} is tying up cash with ${ritems[0].s} recorded unit(s) sold.</div>`);
+  if(anomalies[0])brief.push(`<div class='insight red'><b>🚨 Review unusual expense</b><br>${esc(anomalies[0].desc)} · ${money(anomalies[0].a)}.</div>`);
+  if(!brief.length)brief.push(`<div class='insight ok'><b>✅ Business looks steady</b><br>${esc(fast?.n||'Your top product')} is leading sales and no urgent AI risk was detected.</div>`);
+  document.getElementById('copilotBrief').innerHTML=`<div class='insight blue'><b>Health ${h.score}/100 · ${h.label}</b><br>Tracker balance is ${money(z.balance)} and business revenue is ${money(z.r)}.</div>`+brief.join('');
+  const actions=[];
+  if(buy[0])actions.push(`<div class='copilot-action'><div><b>🤖 Reorder ${esc(buy[0].n)}</b><div class='small muted'>${buy[0].ai.qty} units · confidence ${buy[0].ai.score}% · est. ${money(buy[0].ai.qty*buy[0].co)}</div></div><span class='tag'>BUY</span></div>`);
+  if(ritems[0])actions.push(`<div class='copilot-action'><div><b>🛑 Review ${esc(ritems[0].n)}</b><div class='small muted'>${money(ritems[0].riskValue)} estimated money at risk.</div></div><span class='tag'>PROTECT CASH</span></div>`);
+  if(anomalies[0])actions.push(`<div class='copilot-action'><div><b>🚨 Review ${esc(anomalies[0].cat||'expense')}</b><div class='small muted'>${esc(anomalies[0].desc)} · ${money(anomalies[0].a)}</div></div><span class='tag'>CHECK</span></div>`);
+  if(h.low)actions.push(`<div class='copilot-action'><div><b>📦 Review ${h.low} low-stock item(s)</b><div class='small muted'>Use Inventory quantity controls or AI Orders.</div></div><span class='tag'>STOCK</span></div>`);
+  document.getElementById('copilotActions').innerHTML=actions.slice(0,4).join('')||`<div class='empty-state'>No urgent action detected. Keep monitoring sales, cash and stock.</div>`;
+  document.getElementById('riskList').innerHTML=ritems.slice(0,6).map(x=>`<div class='insight ${x.days>30||x.s<5?'red':''}'><div class='section-title'><b>${esc(x.n)}</b><span class='pill'>${money(x.riskValue)} at risk</span></div><div class='small muted' style='margin-top:5px'>Stock ${x.q} · sold ${x.s} total · ${x.days===9999?'no recorded sale':x.days+' day(s) since last sale'} · stock value ${money(x.q*x.co)}</div></div>`).join('')||`<div class='empty-state'>No slow/dead-stock risk is currently visible.</div>`;
+  document.getElementById('smartReorderList').innerHTML=smart.map(x=>`<div class='insight ${x.ai.status==='BUY'?'ok':x.ai.status==='HOLD'?'red':'blue'}'><div class='section-title'><div><b>${esc(x.n)}</b><div class='small muted'>Stock ${x.q} · demand ${demand(x).weekly}/week · margin ${marginPct(x).toFixed(1)}%</div></div><span class='pill ${x.ai.status==='BUY'?'status-buy':x.ai.status==='HOLD'?'status-hold':'status-monitor'}'>${x.ai.status}${x.ai.qty?` · ${x.ai.qty} units`:''}</span></div><div class='small' style='margin-top:7px'>${esc(x.ai.reason)}</div>${x.ai.status==='BUY'?`<div class='bar'><i style='width:${x.ai.score}%'></i></div><div class='small muted'>AI confidence estimate: ${x.ai.score}%</div>`:''}</div>`).join('')||`<div class='empty-state'>Add products to activate the smart reorder engine.</div>`;
+  document.getElementById('anomalyList').innerHTML=anomalies.map(x=>`<div class='insight red'><b>⚠️ ${esc(x.cat||'Expense')} · ${money(x.a)}</b><br>${esc(x.desc)}<br><span class='small muted'>This is above the demo's unusual-expense threshold compared with other recorded expenses.</span></div>`).join('')||`<div class='insight ok'><b>✓ No unusual expense detected</b><br>BizBuddy compares recorded expenses against the current expense pattern.</div>`;
+  const sel=document.getElementById('simProduct');if(sel){const current=sel.value;sel.innerHTML=items.map(x=>`<option value='${esc(x.id)}'>${esc(x.n)}</option>`).join('');if(items.some(x=>String(x.id)===String(current)))sel.value=current;else if(items[0])sel.value=items[0].id;const x=items.find(v=>String(v.id)===String(sel.value));if(x){const pEl=document.getElementById('simPrice'),uEl=document.getElementById('simUnits');if(document.activeElement!==pEl)pEl.value=x.pr;if(document.activeElement!==uEl)uEl.value=Math.max(1,Math.round(demand(x).weekly*4.3));}}
+  updateSimulator();
+}
+
+function answer(q){
+  q=q.toLowerCase();const z=stats(),d7=dayTotals(),fast=[...items].sort((a,b)=>b.s-a.s)[0],margin=[...items].sort((a,b)=>(b.pr-b.co)-(a.pr-a.co))[0],needs=items.filter(x=>smartDecision(x).status==='BUY'),h=healthData(),risk=riskItems();let cats={};trackerTx.filter(x=>x.t==='expense').forEach(x=>cats[x.cat]=(cats[x.cat]||0)+x.a);let top=Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
+  if(q.includes('health')||q.includes('score'))return `Business Health is ${h.score}/100 (${h.label}). ${h.low} low-stock item(s), ${h.anomalies.length} anomaly alert(s), and about ${money(h.risk)} of inventory money is at risk.`;
+  if(q.includes('risk')||q.includes('dead stock'))return risk.length?`BizBuddy estimates about ${money(h.risk)} of inventory money is at risk, led by ${risk[0].n} at about ${money(risk[0].riskValue)}.`:'No material slow/dead-stock exposure is currently detected.';
+  if(q.includes('what if')||q.includes('simulate'))return 'Use the AI Copilot What-If Business Simulator to compare a price, monthly demand and extra stock purchase scenario before making a decision.';
+  if(q.includes('today')&&q.includes('sell'))return `Today the business recorded ${money(d7.sales)} in sales. ${tx.filter(x=>x.t==='sale'&&dateOnly(x.time)===todayKey()).length} sale transaction(s) were created, and each sale is in Tracker as income.`;
+  if(q.includes('profit'))return `Business gross profit is ${money(z.r-z.c)} on ${money(z.r)} revenue, giving a ${z.r?((z.r-z.c)/z.r*100).toFixed(1):0}% product margin. Today's estimated operating result after today's manual expenses is ${money(d7.profit)}.`;
+  if(q.includes('purchase')||q.includes('order'))return needs.length?`Smart reorder recommendations: ${needs.map(x=>x.n+' '+smartDecision(x).qty+' units').join(', ')}. These recommendations consider demand, stock and unit margin.`:'No high-confidence purchase is currently recommended by the smart reorder engine.';
+  if(q.includes('margin')||q.includes('most profit'))return `${margin?.n||'No product'} has the highest unit margin at ${money((margin?.pr||0)-(margin?.co||0))} per unit among current products.`;
+  if(q.includes('best')||q.includes('most sold')||q.includes('fast'))return `${fast?.n||'No product'} has the highest recorded sales at ${fast?.s||0} units.`;
+  if(q.includes('money')||q.includes('expense')||q.includes('tracker'))return `Tracker currently shows ${money(z.allIncome)} income and ${money(z.allExpense)} expenses, leaving ${money(z.balance)}. ${top?`Your largest manual expense category is ${top[0]} (${money(top[1])}).`:''}`;
+  if(q.includes('stock'))return `${items.filter(isLow).length} product(s) are at or below their minimum stock level: ${items.filter(isLow).map(x=>x.n).join(', ')||'none'}.`;
+  return 'I can answer about Business Health, Money at Risk, smart reorders, what-if scenarios, today’s sales, profit, Tracker money flow, stock alerts, product margins and AI recommendations.';
+}
+function ask(){const q=document.getElementById('q').value.trim();if(!q)return;const c=document.getElementById('chat');c.innerHTML+=`<div class='msg user' style='padding:10px 12px;margin:7px 0;border-radius:11px;max-width:90%;background:var(--primary);color:#fff;margin-left:auto'>${esc(q)}</div><div class='msg bot' style='padding:10px 12px;margin:7px 0;border-radius:11px;max-width:90%;background:#fff;border:1px solid var(--line);line-height:1.4'>${esc(answer(q))}</div>`;c.scrollTop=c.scrollHeight;document.getElementById('q').value=''}
+document.getElementById('ask').onclick=ask;document.getElementById('q').onkeydown=e=>{if(e.key==='Enter')ask()};
+document.querySelectorAll('.askq').forEach(b=>b.onclick=()=>{document.getElementById('q').value=b.textContent;ask()});
+
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));['dash','inv','money','biz','fin','orders','copilot','ai'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==b.dataset.t));window.scrollTo({top:0,behavior:'smooth'})});
+
+function buildChart(containerId,series){
+  const el=document.getElementById(containerId);if(!el)return;
+  const w=760,h=240,p=34,base=h-30,values=series.flatMap(s=>s.values.map(Number));
+  let min=Math.min(0,...values),max=Math.max(0,...values);
+  if(!Number.isFinite(min)||!Number.isFinite(max)){min=0;max=10}
+  if(min===max)max=min+10;
+  const range=max-min, yOf=v=>base-((Number(v)-min)/range)*(base-22);
+  let svg=`<svg viewBox='0 0 ${w} ${h}' role='img' aria-label='Business financial chart'>`;
+  for(let i=0;i<4;i++){const value=max-(range*i/3),y=yOf(value);svg+=`<line x1='${p}' y1='${y}' x2='${w-12}' y2='${y}' stroke='#e5e7eb' stroke-width='1'/>`;svg+=`<text x='2' y='${y+3}' font-size='9' fill='#94a3b8'>${money(value)}</text>`}
+  if(min<0&&max>0){const zy=yOf(0);svg+=`<line x1='${p}' y1='${zy}' x2='${w-12}' y2='${zy}' stroke='#cbd5e1' stroke-width='1.5' stroke-dasharray='5 4'/>`}
+  const count=series[0]?.values.length||0,step=(w-p-18)/Math.max(1,count-1);
+  series.forEach((s,si)=>{
+    const pts=s.values.map((v,i)=>{const x=p+i*step;const y=yOf(v);return [x,y]});
+    const d=pts.map((pt,i)=>(i?'L':'M')+pt[0].toFixed(1)+' '+pt[1].toFixed(1)).join(' ');
+    const dash=si===2?'4 4':'';const stroke=['#4f46e5','#0f8a5b','#f59e0b'][si]||'#4f46e5';
+    svg+=`<path d='${d}' fill='none' stroke='${stroke}' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' ${dash?`stroke-dasharray='${dash}'`:''}/>`;
+    pts.forEach((pt,i)=>{svg+=`<circle cx='${pt[0]}' cy='${pt[1]}' r='4' fill='#fff' stroke='${stroke}' stroke-width='3'><title>${esc(series[si].labels[i])}: ${money(s.values[i])}</title></circle>`});
   });
-
-  // ---- glasses icon builder (three simple shape variants) ----
-  function glassesSVG(shape){
-    const shapes = {
-      aviator: `<path d="M10 40c4-8 12-12 20-12h60c8 0 16 4 20 12" stroke="currentColor" stroke-width="3" fill="none"/>
-        <path d="M28 30c14-4 28-4 44 0 10 3 16 12 14 22-2 11-13 18-24 16-10-2-17-11-16-21 0-8 4-14 12-17" fill="none" stroke="currentColor" stroke-width="3"/>
-        <ellipse cx="35" cy="47" rx="19" ry="16" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="3"/>
-        <ellipse cx="85" cy="47" rx="19" ry="16" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="3"/>
-        <path d="M54 44c4-5 12-5 16 0" stroke="currentColor" stroke-width="3" fill="none"/>`,
-      round: `<circle cx="35" cy="48" r="21" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="3.5"/>
-        <circle cx="85" cy="48" r="21" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="3.5"/>
-        <path d="M56 46c3-4 9-4 12 0" stroke="currentColor" stroke-width="3" fill="none"/>
-        <path d="M14 44 6 40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-        <path d="M106 44 114 40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>`,
-      square: `<rect x="16" y="30" width="38" height="32" rx="6" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="3.5"/>
-        <rect x="66" y="30" width="38" height="32" rx="6" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="3.5"/>
-        <path d="M54 44h12" stroke="currentColor" stroke-width="3"/>
-        <path d="M14 38 5 34" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-        <path d="M106 38 115 34" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>`
-    };
-    return `<svg class="glasses-icon" viewBox="0 0 120 90" fill="none">${shapes[shape]}</svg>`;
-  }
-
-  // ---- product data ----
-  const products = [
-    {name:"Meridian Aviator", cat:"sun", tag:"Sunglasses", shape:"aviator", price:1499, old:2499, badge:"sale"},
-    {name:"Harbor Wayfarer", cat:"sun", tag:"Sunglasses", shape:"square", price:1299, old:1799, badge:"best"},
-    {name:"Coastline Polarized", cat:"sun", tag:"Sunglasses · Sport", shape:"round", price:1999, old:2499, badge:"sale"},
-    {name:"Nightfall Round Sun", cat:"sun", tag:"Sunglasses", shape:"round", price:1599, old:null, badge:"new"},
-    {name:"Ledger Blue-Light", cat:"opt", tag:"Eyeglasses", shape:"square", price:899, old:1199, badge:"sale"},
-    {name:"Atlas Titanium", cat:"opt", tag:"Eyeglasses", shape:"round", price:2999, old:null, badge:"best"},
-    {name:"Folio Cat-Eye", cat:"opt", tag:"Eyeglasses", shape:"round", price:1599, old:1999, badge:"sale"},
-    {name:"Index Rectangle", cat:"opt", tag:"Eyeglasses", shape:"square", price:1099, old:null, badge:"new"},
-    {name:"Beam Titanium Frame", cat:"frame", tag:"Bare Frame", shape:"round", price:2999, old:3499, badge:"sale"},
-    {name:"Grid Acetate Frame", cat:"frame", tag:"Bare Frame", shape:"square", price:1799, old:null, badge:"best"},
-    {name:"Flex Sport Frame", cat:"frame", tag:"Bare Frame", shape:"aviator", price:1899, old:2299, badge:"sale"},
-    {name:"Junior Flex Frame", cat:"kids", tag:"Kids · Frame", shape:"round", price:999, old:1299, badge:"new"},
-  ];
-
-  const grid = document.getElementById('prodGrid');
-  const badgeLabel = {sale:"Sale", new:"New", best:"Bestseller"};
-
-  function money(n){ return "₹" + n.toLocaleString('en-IN'); }
-
-  function render(filter){
-    grid.innerHTML = "";
-    products
-      .filter(p => filter === "all" || p.cat === filter)
-      .forEach(p => {
-        const off = p.old ? Math.round(100 - (p.price / p.old) * 100) : null;
-        const card = document.createElement('div');
-        card.className = "prod-card";
-        card.innerHTML = `
-          <div class="prod-media">
-            <span class="badge ${p.badge}">${badgeLabel[p.badge]}</span>
-            ${glassesSVG(p.shape)}
-          </div>
-          <div class="prod-body">
-            <span class="prod-cat">${p.tag}</span>
-            <span class="prod-name">${p.name}</span>
-            <div class="prod-price-row">
-              <span class="price-now">${money(p.price)}</span>
-              ${p.old ? `<span class="price-old">${money(p.old)}</span><span class="price-off">${off}% off</span>` : ""}
-            </div>
-            <button class="add-btn">Add to cart</button>
-          </div>`;
-        grid.appendChild(card);
-      });
-  }
-  render("all");
-
-  document.getElementById('filterRow').addEventListener('click', e => {
-    const btn = e.target.closest('.filter-btn');
-    if(!btn) return;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    render(btn.dataset.filter);
+  (series[0]?.labels||[]).forEach((lab,i)=>{const x=p+i*step;svg+=`<text x='${x}' y='${h-7}' text-anchor='middle' font-size='10' fill='#64748b'>${esc(lab)}</text>`});
+  svg+='</svg>';el.innerHTML=svg;
+}
+function last7(){const arr=[];for(let i=6;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');arr.push({key,label:d.toLocaleDateString('en-IN',{weekday:'short'}).slice(0,3),sales:tx.filter(x=>x.t==='sale'&&dateOnly(x.time)===key).reduce((a,x)=>a+x.a,0),expense:tx.filter(x=>x.t==='purchase'&&dateOnly(x.time)===key).reduce((a,x)=>a+x.a,0)+trackerTx.filter(x=>x.t==='expense'&&dateOnly(x.time)===key).reduce((a,x)=>a+x.a,0)});}return arr}
+function financialActivityTrend(){
+  const events=combinedLedger().slice(0,10).reverse();
+  const labels=events.map(x=>{
+    if(x.source==='Business'&&x.cat==='Business Sale') return `Sale · ${x.desc.replace(/^Sale:\s*/,'').slice(0,12)}`;
+    if(x.source==='Business') return `Buy · ${x.desc.replace(/^Purchase:\s*/,'').slice(0,12)}`;
+    return `${x.t==='income'?'Income':'Expense'} · ${(x.cat||'Other').slice(0,10)}`;
   });
+  return {
+    labels,
+    incoming:events.map(x=>x.t==='income'?Number(x.a||0):0),
+    outgoing:events.map(x=>x.t==='expense'?Number(x.a||0):0),
+    net:events.map(x=>x.t==='income'?Number(x.a||0):-Number(x.a||0))
+  };
+}
+function renderDashboard(){
+  const z=stats(),d=dayTotals(),lowItems=items.filter(isLow),needs=items.filter(x=>demand(x).need);document.getElementById('todaySales').textContent=money(d.sales);document.getElementById('todayExpense').textContent=money(d.purchases+d.manualExp);document.getElementById('todayProfit').textContent=money(d.profit);document.getElementById('dashBalance').textContent=money(z.balance);document.getElementById('dashInventory').textContent=money(z.inv);document.getElementById('dashAttention').textContent=lowItems.length;
+  const fast=[...items].sort((a,b)=>b.s-a.s)[0]||{n:'—',s:0,q:0};const slow=[...items].sort((a,b)=>a.s-b.s)[0]||{n:'—',s:0,q:0};
+  document.getElementById('brief').innerHTML=`<div class='insight blue'><b>Sales leader: ${esc(fast.n)}</b><br>${fast.s} recorded units sold. Current stock: ${fast.q}.</div><div class='insight ${lowItems.length?'':'ok'}'><b>${lowItems.length?lowItems.length+' stock alert(s)':'Stock looks healthy'}</b><br>${lowItems.length?lowItems.map(x=>esc(x.n)).join(', ')+' need review.':'No product is at or below its minimum stock level.'}</div><div class='insight cyan'><b>Money flow is connected</b><br>Business sales of ${money(z.r)} are income in Tracker, while business purchases of ${money(z.p)} are expenses in Tracker.</div>`;
+  document.getElementById('priorities').innerHTML=(lowItems.length?`<div class='notice'><strong>🔔 Low stock</strong><span class='small muted'>${lowItems.map(x=>esc(x.n)).join(', ')}</span></div>`:`<div class='notice'><strong>✅ Stock check</strong><span class='small muted'>No urgent low-stock items.</span></div>`)+(needs.length?`<div class='notice'><strong>🤖 AI restock</strong><span class='small muted'>${needs.length} product(s) have purchase recommendations.</span></div>`:`<div class='notice'><strong>🤖 AI restock</strong><span class='small muted'>No purchase recommendations right now.</span></div>`)+`<div class='notice'><strong>🐢 Slow mover</strong><span class='small muted'>${esc(slow.n)} has ${slow.s} recorded sales.</span></div>`;
+  const data=last7();buildChart('cashChart',[{name:'Income',values:data.map(x=>x.sales),labels:data.map(x=>x.label)},{name:'Expenses',values:data.map(x=>x.expense),labels:data.map(x=>x.label)}]);
+  const recent=combinedLedger().slice(0,9);document.getElementById('recentRows').innerHTML=recent.map(x=>`<tr><td>${esc(shortDate(x.time))}</td><td><span class='pill ${x.t==='income'?'sale':'expense'}'>${x.t==='income'?'IN':'OUT'}</span></td><td>${esc(x.desc)}</td><td class='${x.t==='income'?'positive':'negative'}'>${x.t==='income'?'+':'−'}${money(x.a)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No transactions yet.</td></tr>';
+  document.getElementById('stockWatch').innerHTML=items.slice().sort((a,b)=>(a.q-a.m)-(b.q-b.m)).slice(0,5).map(x=>`<div class='statline'><span><b>${esc(x.n)}</b><br><small class='muted'>${x.q} in stock · min ${x.m}</small></span><span class='pill ${isLow(x)?'low':''}'>${isLow(x)?'Review':'OK'}</span></div>`).join('')||'<div class="empty-state">Add products to watch stock.</div>';
+}
+function renderInventory(){
+ const q=document.getElementById('search').value.toLowerCase(),f=document.getElementById('stockFilter').value;let shown=items.filter(x=>(x.n+' '+x.c).toLowerCase().includes(q));if(f==='low')shown=shown.filter(isLow);if(f==='healthy')shown=shown.filter(x=>!isLow(x));
+ document.getElementById('rows').innerHTML=shown.map(x=>`<tr><td><b>${esc(x.n)}</b><br><small class='muted'>${esc(x.c)} · margin ${money(x.pr-x.co)}/unit</small></td><td><b>${x.q}</b></td><td>${x.s}</td><td>${money(x.pr)}</td><td><span class='pill ${isLow(x)?'low':''}'>${isLow(x)?'Reorder':'Healthy'}</span></td><td><div class='action-card'><div class='qty-box'><span class='qty-label'>Quantity to sell</span><div class='action'><input class='qty sellqty' data-id='${x.id}' type='number' min='1' step='1' value='1'><button class='btn primary' data-sell='${x.id}'>Sell & Bill</button></div></div></div></td><td><div class='action-card'><div class='qty-box'><span class='qty-label'>Quantity to buy</span><div class='action'><input class='qty buyqty' data-id='${x.id}' type='number' min='1' step='1' value='1'><button class='btn green' data-buy='${x.id}'>Buy & Expense</button></div></div></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No products found.</td></tr>';
+ document.getElementById('docRows').innerHTML=docs.slice(0,15).map(d=>`<tr><td><span class='pill ${d.type==='sale'?'sale':'purchase'}'>${d.type==='sale'?'SALE BILL':'PURCHASE'}</span></td><td>${esc(d.number)}</td><td>${esc(d.product)}</td><td>${d.qty}</td><td>${money(d.amount)}</td><td>${esc(formatTime(d.time))}</td><td><button class='btn soft' data-doc='${d.id}'>View</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No bills or purchase records yet.</td></tr>';
+}
+function renderTracker(){
+ const rows=combinedLedger().filter(x=>trackerFilter==='all'||x.t===trackerFilter);document.getElementById('trackerRows').innerHTML=rows.map(x=>`<tr><td class='${x.t==='income'?'positive':'negative'}'><b>${x.t==='income'?'Income':'Expense'}</b></td><td><span class='pill ${x.source==='Business'?(x.t==='income'?'sale':'purchase'):'manual'}'>${x.source}</span></td><td>${esc(x.cat)}</td><td>${esc(x.desc)}${x.ref?`<br><small class='muted'>Ref: ${esc(x.ref)}</small>`:''}</td><td class='${x.t==='income'?'positive':'negative'}'>${x.t==='income'?'+':'−'}${money(x.a)}</td><td>${esc(formatTime(x.time))}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">No money movements match this filter.</td></tr>';
+ const z=stats();document.getElementById('tIncome').textContent=money(z.allIncome);document.getElementById('tExpense').textContent=money(z.allExpense);document.getElementById('tBalance').textContent=money(z.balance);document.getElementById('tBizSales').textContent=money(z.r);document.getElementById('tBizPurch').textContent=money(z.p);document.getElementById('tManual').textContent=trackerTx.length;
+}
+function renderBusiness(){
+ const fast=[...items].sort((a,b)=>b.s-a.s)[0],slow=[...items].sort((a,b)=>a.s-b.s)[0],z=stats();document.getElementById('fastName').textContent=fast?.n||'—';document.getElementById('fastInfo').textContent=fast?`${fast.s} units sold · stock ${fast.q}`:'No sales yet';document.getElementById('slowName').textContent=slow?.n||'—';document.getElementById('slowInfo').textContent=slow?`${slow.s} units sold · stock ${slow.q}`:'No sales yet';document.getElementById('invInvestment').textContent=money(z.inv);
+ const top=fast?.s||1;document.getElementById('productPerf').innerHTML=items.map(x=>`<div class='product-card'><div class='top'><b>${esc(x.n)}</b><span class='pill ${isLow(x)?'low':''}'>${isLow(x)?'Low stock':'Healthy'}</span></div><div class='small muted' style='margin-top:5px'>${x.s} units sold · ${money(x.pr-x.co)} margin/unit</div><div class='bar'><i style='width:${Math.min(100,x.s/top*100)}%'></i></div><div class='mini-grid'><div class='mini-card'><small class='muted'>Revenue</small><br><b>${money(x.s*x.pr)}</b></div><div class='mini-card'><small class='muted'>Stock value</small><br><b>${money(x.q*x.co)}</b></div></div></div>`).join('')||'<div class="empty-state">Add products to see performance.</div>';
+ document.getElementById('demand').innerHTML=items.map(x=>{const d=demand(x);return `<div class='insight ${d.need?'':'ok'}'><b>${esc(x.n)}</b><br>Weekly demand ≈ ${d.weekly} · current stock ${x.q} · target ${d.target}<br><b>${d.need?'AI recommends '+d.need+' unit(s)':'No order needed'}</b></div>`}).join('')||'<div class="empty-state">No demand data yet.</div>';
+}
+function renderFinance(){
+ const z=stats();document.getElementById('frev').textContent=money(z.r);document.getElementById('cogs').textContent=money(z.c);document.getElementById('purch').textContent=money(z.p);document.getElementById('other').textContent=money(z.me);document.getElementById('gross').textContent=money(z.r-z.c);document.getElementById('margin').textContent=(z.r?((z.r-z.c)/z.r*100):0).toFixed(1)+'%';
+ document.getElementById('fins').innerHTML=`<div class='insight ${(z.r-z.c)>=0?'ok':'red'}'><b>Gross profit*</b><br>${money(z.r)} revenue − ${money(z.c)} product cost = <b>${money(z.r-z.c)}</b>.</div><div class='insight'><b>Business cash movement</b><br>${money(z.r)} sales − ${money(z.p)} purchases = ${money(z.r-z.p)} before manual Tracker expenses.</div><div class='insight blue'><b>Overall Tracker balance</b><br>Income ${money(z.allIncome)} − expenses ${money(z.allExpense)} = <b>${money(z.balance)}</b>.</div><div class='insight cyan'><b>Inventory exposure</b><br>${money(z.inv)} is currently tied up in stock at cost.</div>`;
+ let cats={};tx.filter(x=>x.t==='purchase').forEach(x=>cats['Business Purchase']=(cats['Business Purchase']||0)+x.a);trackerTx.filter(x=>x.t==='expense').forEach(x=>cats['Tracker: '+(x.cat||'Other')]=(cats['Tracker: '+(x.cat||'Other')]||0)+x.a);const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);document.getElementById('break').innerHTML=entries.map(([k,v])=>`<div style='margin-bottom:13px'><b>${esc(k)}</b><div class='bar'><i style='width:${Math.min(100,v/Math.max(1,z.allExpense)*100)}%'></i></div><span class='small muted'>${money(v)}</span></div>`).join('')||'<span class="muted">No expenses yet.</span>';
+ const trend=financialActivityTrend();
+ if(trend.labels.length){
+   buildChart('financeChart',[
+     {name:'Money In',values:trend.incoming,labels:trend.labels},
+     {name:'Money Out',values:trend.outgoing,labels:trend.labels},
+     {name:'Net Impact',values:trend.net,labels:trend.labels}
+   ]);
+ }else{
+   document.getElementById('financeChart').innerHTML=`<div class='empty-state'>Make a sale, purchase stock, or add a Tracker entry and the financial trend will appear here.</div>`;
+ }
+}
+function renderOrders(){document.getElementById('orderslist').innerHTML=items.map(x=>{const d=demand(x),ai=smartDecision(x);if(ai.status==='BUY')return `<div class='insight ok'><div class='section-title'><b>📦 ${esc(x.n)}</b><span class='pill status-buy'>BUY · ${ai.qty}</span></div><br>Current ${x.q} · demand ${d.weekly}/week · target ${d.target}<p style='margin:7px 0'>Recommended: <b>${ai.qty} units</b> · estimated expense <b>${money(ai.qty*x.co)}</b></p><div class='small muted'>${esc(ai.reason)}</div><div class='bar'><i style='width:${ai.score}%'></i></div><div class='small muted'>AI confidence: ${ai.score}%</div><button class='btn primary' data-order='${x.id}' style='margin-top:8px'>Review & Approve</button></div>`;if(ai.status==='HOLD')return `<div class='insight red'><div class='section-title'><b>⏸ ${esc(x.n)}</b><span class='pill status-hold'>HOLD</span></div><br>Current ${x.q} · demand ${d.weekly}/week · margin ${marginPct(x).toFixed(1)}%<p style='margin:7px 0'>AI says: <b>do not reorder yet</b>.</p><div class='small muted'>${esc(ai.reason)}</div></div>`;return `<div class='insight blue'><div class='section-title'><b>👀 ${esc(x.n)}</b><span class='pill status-monitor'>MONITOR</span></div><br>Current ${x.q} · demand ${d.weekly}/week · target ${d.target}<div class='small muted' style='margin-top:6px'>${esc(ai.reason)}</div></div>`}).join('')||'<div class="empty-state">Add products to generate AI recommendations.</div>';document.getElementById('orderRows').innerHTML=orders.slice(0,20).map(o=>`<tr><td>${esc(o.id)}</td><td>${esc(o.product)}</td><td>${o.qty}</td><td>${money(o.cost)}</td><td><span class='pill ${o.source==='AI'?'sale':''}'>${esc(o.status)}</span></td><td>${esc(formatTime(o.time))}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">No purchase orders yet.</td></tr>'}
+function renderAI(){const z=stats(),low=items.filter(isLow),needs=items.filter(x=>demand(x).need),fast=[...items].sort((a,b)=>b.s-a.s)[0],margin=[...items].sort((a,b)=>(b.pr-b.co)-(a.pr-a.co))[0];document.getElementById('aiInsights').innerHTML=`<div class='insight blue'><b>Today</b><br>${money(dayTotals().sales)} sales recorded so far.</div><div class='insight ${low.length?'':'ok'}'><b>Stock alerts</b><br>${low.length?low.map(x=>esc(x.n)).join(', '):'None'}</div><div class='insight'><b>Top seller</b><br>${esc(fast?.n||'—')} with ${fast?.s||0} units sold.</div><div class='insight ok'><b>Highest unit margin</b><br>${esc(margin?.n||'—')} · ${money((margin?.pr||0)-(margin?.co||0))}/unit.</div><div class='insight cyan'><b>AI orders waiting</b><br>${needs.length} product(s) currently have a recommendation.</div><div class='insight'><b>Tracker balance</b><br>${money(z.balance)} after all recorded income and expenses.</div>`}
+function renderDocs(){document.getElementById('docRows').innerHTML=docs.slice(0,15).map(d=>`<tr><td><span class='pill ${d.type==='sale'?'sale':'purchase'}'>${d.type==='sale'?'SALE BILL':'PURCHASE'}</span></td><td>${esc(d.number)}</td><td>${esc(d.product)}</td><td>${d.qty}</td><td>${money(d.amount)}</td><td>${esc(formatTime(d.time))}</td><td><button class='btn soft' data-doc='${d.id}'>View</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No bills or purchase records yet.</td></tr>'}
 
-  // mobile burger -> smooth-scroll to shop as simple affordance
-  document.getElementById('burger').addEventListener('click', () => {
-    document.querySelector('#shop').scrollIntoView({behavior:'smooth'});
-  });
+document.getElementById('docRows').onclick=e=>{const id=e.target.dataset.doc;if(!id)return;const d=docs.find(x=>x.id==id);if(!d)return;if(d.type==='sale'){const row=tx.find(x=>x.id==d.id);if(row)showSaleBill(row)}else{const row=tx.find(x=>x.id==d.id);if(row)showPurchaseReceipt({...row,supplier:d.supplier,invoice:d.invoice})}};
+
+function render(){renderDashboard();renderInventory();renderTracker();renderBusiness();renderFinance();renderOrders();renderCopilot();renderAI();renderDocs();save()}
+
+['simProduct','simPrice','simUnits','simOrder'].forEach(id=>{const el=document.getElementById(id);if(el){el.oninput=updateSimulator;el.onchange=updateSimulator}});
+function clock(){const d=new Date();document.getElementById('clock').textContent=d.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
+clock();setInterval(clock,30000);
+
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));['dash','inv','money','biz','fin','orders','copilot','ai'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==b.dataset.t));window.scrollTo({top:0,behavior:'smooth'})});
+
+// Preload the visible demo experience only once. Existing user data remains untouched.
+if(!localStorage.getItem('bb5seeded')){
+  if(!tx.length && items.length){tx=items.filter(x=>x.s>0).map(x=>({id:'seed-'+x.id,t:'sale',a:x.s*x.pr,cost:x.s*x.co,cat:'Business Sale',desc:`Demo opening sales: ${x.s} × ${x.n}`,time:nowISO(),product:x.n,qty:x.s,ref:'INV-DEMO-'+x.id,customer:'Demo Customer'}));}
+  localStorage.setItem('bb5seeded','1');save();
+}
+// Sensible default for Tracker date.
+if(!document.getElementById('mdate').value)document.getElementById('mdate').value=todayKey();
+render();
 </script>
 </body>
 </html>
